@@ -103,6 +103,36 @@ for d in C.PEOPLE:
     check(len(d["tf"]) == 8 and len(d["gaps"]) == 8 and len(d["qs"]) == 6 and len(d["match"]) == 5,
           f"{d['name']}: full exercise set (8 T/F, 8 gaps, 6 questions, 5 matches)")
 
+# ------------------------------------------------- Word versions, when present
+DOCX = os.path.join(os.path.dirname(HERE), "materials", "docx")
+if os.path.isdir(DOCX) and os.listdir(DOCX):
+    print("-- Word versions match the PDFs")
+    from docx import Document
+
+    def col(path, ncols, nrows, c):
+        t = [x for x in Document(path).tables
+             if len(x.columns) == ncols and len(x.rows) == nrows]
+        return [re.sub(r"^[a-h]\)\s*", "", r.cells[c].text.strip()) for r in t[0].rows] if t else []
+
+    for i, d in enumerate(C.PEOPLE, 1):
+        f = os.path.join(DOCX, f"0{i}-{d['slug']}.docx")
+        if not os.path.exists(f):
+            check(False, f"{d['name']}: Word version exists"); continue
+        want = [None] * len(d["match"])
+        for j, slot in enumerate(d["_match_key"]):
+            want[slot] = html.unescape(re.sub("<[^>]+>", "", d["match"][j][1]))
+        check(col(f, 4, len(d["match"]), 3) == want,
+              f"{d['name']}: Word matching column is in the same order as the PDF")
+
+    f = os.path.join(DOCX, "04-mixed-round.docx")
+    if os.path.exists(f):
+        want = [None] * len(C.NUMBERS)
+        for j, slot in enumerate(C._nums_key):
+            want[slot] = html.unescape(re.sub("<[^>]+>", "", C.NUMBERS[j][1]))
+        check(col(f, 4, len(C.NUMBERS), 3) == want,
+              "Word numbers round is in the same order as the PDF")
+    print()
+
 print(f"\n{checks - len(fails)}/{checks} checks passed.")
 if fails:
     print("\nFAILURES:")

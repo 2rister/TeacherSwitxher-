@@ -1,0 +1,55 @@
+/* ============================================================================
+   Printer-friendly override. Loaded AFTER style.css.
+   The colour sheets flood the whole page with a parchment wash — that is where
+   almost all the ink goes. This strips the wash, drops to greyscale, and turns
+   the solid red/navy task bars into rules, keeping the same layout and rhythm.
+   ========================================================================== */
+
+:root {
+  --paper:      #ffffff;
+  --paper-deep: #ffffff;
+  --paper-edge: #ffffff;
+  --ink:        #000000;
+  --ink-soft:   #4a4a4a;
+  --red:        #000000;
+  --red-deep:   #000000;
+  --navy:       #000000;
+  --navy-deep:  #000000;
+  --gold:       #8c8c8c;
+  --rule:       #8c8c8c;
+}
+
+body { background: #9a9a9a; }
+
+/* the expensive bits: full-page wash, paper tooth, plate vignette */
+.page { background: #fff !important; }
+.page::before, .page::after { display: none !important; }
+
+/* task bars become rules instead of solid blocks of colour */
+.task { background: #fff; box-shadow: none; border-color: #000; }
+.task-head, .task.navy .task-head {
+  background: #fff; color: #000;
+  border-bottom: 1.4pt solid #000;
+}
+.task-no, .task.navy .task-no { background: #000; color: #fff; }
+.task-hint { opacity: 1; color: #4a4a4a; }
+
+.glossary { background: #fff; border-color: #000; }
+.glossary-head { background: #ededed; color: #000; border-bottom: 1pt solid #000; }
+
+.bank { background: #f4f4f4; border-color: #6a6a6a; }
+.tf-opts span, .matchbox { background: #fff; border-color: #000; }
+
+.jeo { background: #fff; border-color: #000; }
+.jeo-pts { background: #000; color: #fff; }
+
+.flow .step, .flow .step:nth-child(4n+3) { background: #fff; color: #000; border: 1pt solid #000; }
+
+.portrait-frame { background: #fff; box-shadow: none; border-color: #000; }
+.portrait-frame img { filter: grayscale(1) contrast(1.14) brightness(1.06); }
+.flag { filter: grayscale(1) contrast(1.1); }
+
+.note { background: #f6f6f6 !important; border-left-color: #000 !important; }
+.hero-tagline { border-left-color: #000; }
+.pullquote { border-color: #000; }
+.masthead-rule { background: #000; height: 1pt; }

@@ -14,6 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT_HTML = os.path.join(ROOT, "materials", "html")
 OUT_PDF = os.path.join(ROOT, "materials", "pdf")
+OUT_BW = os.path.join(ROOT, "materials", "pdf-bw")
 sys.path.insert(0, HERE)
 
 import content as C
@@ -250,16 +251,22 @@ def write_html():
     body = "".join(h[h.index("<body>") + 6: h.index("</body>")] for _, h in SHEETS)
     SHEETS.insert(0, ("00-complete-pack",
                       R.head("Interesting People &#8211; complete A2 pack") + body + "</body></html>"))
-    for name, html in SHEETS:
+    for name, html in list(SHEETS):
         open(os.path.join(OUT_HTML, name + ".html"), "w", encoding="utf-8").write(html)
-        print(f"  html  {name}.html  ({len(html)//1024} KB)")
+        bw = html.replace('<link rel="stylesheet" href="style.css">',
+                          '<link rel="stylesheet" href="style.css">\n'
+                          '<link rel="stylesheet" href="print-bw.css">')
+        assert 'print-bw.css' in bw, "colour sheet lost its stylesheet link"
+        open(os.path.join(OUT_HTML, name + "-bw.html"), "w", encoding="utf-8").write(bw)
+        print(f"  html  {name}.html  + -bw  ({len(html)//1024} KB)")
     return SHEETS
 
 
-def render_pdfs(names):
+def render_pdfs(names, out_dir=None, suffix=""):
     """Print each sheet to A4 and report any page whose content overflows."""
     from playwright.sync_api import sync_playwright
-    os.makedirs(OUT_PDF, exist_ok=True)
+    out_dir = out_dir or OUT_PDF
+    os.makedirs(out_dir, exist_ok=True)
     # This image ships Chromium at a pinned path; never run `playwright install`.
     chrome = os.environ.get("CHROME_BIN", "/opt/pw-browsers/chromium-1194/chrome-linux/chrome")
     launch = {"executable_path": chrome} if os.path.exists(chrome) else {}
@@ -268,19 +275,19 @@ def render_pdfs(names):
         browser = pw.chromium.launch(**launch)
         page = browser.new_page()
         for name in names:
-            src = os.path.join(OUT_HTML, name + ".html")
+            src = os.path.join(OUT_HTML, name + suffix + ".html")
             page.goto("file://" + src, wait_until="networkidle")
             page.wait_for_timeout(400)
             over = page.evaluate("""() => [...document.querySelectorAll('.page')].map((p, i) => ({
                 i: i + 1, over: Math.round(p.scrollHeight - p.clientHeight) }))""")
             for o in over:
                 if o["over"] > 1:
-                    problems.append((name, o["i"], o["over"]))
-            dst = os.path.join(OUT_PDF, name + ".pdf")
+                    problems.append((name + suffix, o["i"], o["over"]))
+            dst = os.path.join(out_dir, name + ".pdf")
             page.pdf(path=dst, format="A4", print_background=True,
                      margin={"top": "0", "right": "0", "bottom": "0", "left": "0"})
             pages = len(over)
-            print(f"  pdf   {name}.pdf  ({pages} page{'s' if pages != 1 else ''}, "
+            print(f"  pdf   {name}{suffix}.pdf  ({pages} page{'s' if pages != 1 else ''}, "
                   f"{os.path.getsize(dst)//1024} KB)")
         browser.close()
     return problems
@@ -292,7 +299,10 @@ if __name__ == "__main__":
     if "--html" in sys.argv:
         sys.exit(0)
     print()
-    problems = render_pdfs([n for n, _ in sheets])
+    names = [n for n, _ in sheets]
+    problems = render_pdfs(names)
+    print()
+    problems += render_pdfs(names, OUT_BW, "-bw")
     if problems:
         print("\n!! CONTENT OVERFLOWS THE PAGE:")
         for n, i, o in problems:
