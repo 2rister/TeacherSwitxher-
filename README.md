@@ -68,6 +68,7 @@
 ```bash
 pip install playwright numpy Pillow python-docx
 python3 build/verify.py     # 45 проверок содержания
+python3 build/make_paper.py # фон-подложка (нужен один раз, файл уже в репозитории)
 python3 build/build.py      # HTML + PDF, цветной и ч/б, с контролем переполнения
 python3 build/make_docx.py  # редактируемые версии для Word
 ```
@@ -84,6 +85,10 @@ python3 build/make_docx.py  # редактируемые версии для Wor
 формулировки и ключи совпадают с PDF (проверяется автоматически).
 
 Правки контента — в `build/content.py`, оформление — в `materials/html/style.css`.
+
+Фактура бумаги — это один запечённый JPEG (`materials/img/paper.jpg`), а не живые
+CSS-градиенты с шумом: последние Chromium не умеет держать вектором и растрировал
+каждую страницу отдельно, отчего цветной комплект весил 12 МБ вместо 2,6 МБ.
 
 ## Изображения и лицензии
 

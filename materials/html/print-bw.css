@@ -1,7 +1,7 @@
 /* ============================================================================
    Printer-friendly override. Loaded AFTER style.css.
-   The colour sheets flood the whole page with a parchment wash — that is where
-   almost all the ink goes. This strips the wash, drops to greyscale, and turns
+   The colour sheets lay a parchment ground over the whole page — that is where
+   almost all the ink goes. This strips the ground, drops to greyscale, and turns
    the solid red/navy task bars into rules, keeping the same layout and rhythm.
    ========================================================================== */
 
@@ -21,9 +21,8 @@
 
 body { background: #9a9a9a; }
 
-/* the expensive bits: full-page wash, paper tooth, plate vignette */
+/* drops the baked parchment ground (materials/img/paper.jpg) entirely */
 .page { background: #fff !important; }
-.page::before, .page::after { display: none !important; }
 
 /* task bars become rules instead of solid blocks of colour */
 .task { background: #fff; box-shadow: none; border-color: #000; }
