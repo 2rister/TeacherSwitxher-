@@ -20,8 +20,7 @@ import glob, os, re, subprocess, sys, tempfile, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-DECK = os.path.join(ROOT, "materials", "jeopardy",
-                    "Jeopardy_Interesting_People_A2_fixed.pptx")
+DECK = os.path.join(ROOT, "materials", "jeopardy", "Jeopardy_Great_Britons_A2.pptx")
 DOCX = os.path.join(ROOT, "materials", "docx")
 PORT = 2002
 
@@ -102,7 +101,7 @@ with tempfile.TemporaryDirectory() as tmp:
     check(count == 84, "the deck opens as a presentation with 84 slides", f"got {count}")
     kind = {i + 1: ("Q" if "POINTS" in h else "A" if h.startswith("ANSWER") else "other")
             for i, h in enumerate(heads)}
-    tiles = [r for r in rows if r[0] == 2]
+    tiles = [r for r in rows if r[0] == 2]   # hotspots over the painted plaques
     shows = [r for r in rows if "SHOW" in r[1].upper()]
     backs = [r for r in rows if "BOARD" in r[1].upper() and r[0] != 2]
     check(len(tiles) == 40, "40 board tiles are clickable", str(len(tiles)))

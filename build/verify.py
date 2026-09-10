@@ -114,14 +114,20 @@ for d in C.PEOPLE:
           f"{d['name']}: full exercise set (8 T/F, 8 gaps, 6 questions, 5 matches)")
 
 # ------------------------------------------------- the Jeopardy deck itself
-DECK = os.path.join(os.path.dirname(HERE), "materials", "jeopardy",
-                    "Jeopardy_Interesting_People_A2_fixed.pptx")
+JDIR = os.path.join(os.path.dirname(HERE), "materials", "jeopardy")
+DECKS = [("Great Britons board", "Jeopardy_Great_Britons_A2.pptx"),
+         ("plain board", "Jeopardy_Interesting_People_A2_fixed.pptx")]
+DECK = os.path.join(JDIR, DECKS[0][1])
 if os.path.exists(DECK):
-    print("-- Jeopardy deck")
+    print("-- Jeopardy decks")
     import audit_jeopardy
-    deck_problems = audit_jeopardy.audit(DECK, quiet=True)
-    check(not deck_problems, "repaired deck: navigation and content are clean",
-          " | ".join(deck_problems[:3]))
+    for label, fn in DECKS:
+        path = os.path.join(JDIR, fn)
+        if not os.path.exists(path):
+            check(False, f"{label}: deck present"); continue
+        deck_problems = audit_jeopardy.audit(path, quiet=True)
+        check(not deck_problems, f"{label}: navigation and content are clean",
+              " | ".join(deck_problems[:3]))
 
     # the deck and the handouts must not disagree about the birth order
     from pptx import Presentation

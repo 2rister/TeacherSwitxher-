@@ -30,25 +30,31 @@ def audit(path, quiet=False):
     AS = [i for i in range(1, len(S) + 1) if head(i).startswith("ANSWER")]
     problems = []
 
-    # --- board grid ------------------------------------------------------
+    # --- board grid ---------------------------------------------------
+    # Tiles are found by their click action, not by their text: on the
+    # illustrated board the point values are painted into the artwork and the
+    # tiles are invisible hotspots with no text at all.
     CATS = ["CHILDHOOD & EARLY LIFE", "CAREER", "ACHIEVEMENTS", "CURIOUS FACTS", "WILD CARD"]
     tiles = []
     for sh in S[1].shapes:
-        if sh.has_text_frame and sh.text_frame.text.strip().isdigit():
-            tiles.append((round(Emu(sh.left).inches, 2), round(Emu(sh.top).inches, 2),
-                          int(sh.text_frame.text.strip()), sh))
+        if target(sh) is None:
+            continue
+        tiles.append((round(Emu(sh.left).inches, 2), round(Emu(sh.top).inches, 2), sh))
     cols = sorted({t[0] for t in tiles})
     rows = sorted({t[1] for t in tiles})
     if not quiet:
         print(f"board: {len(tiles)} tiles, {len(cols)} columns x {len(rows)} rows")
-    for x, y, pts, sh in tiles:
+    if len(tiles) != 40 or len(cols) != 5 or len(rows) != 8:
+        problems.append(f"board: {len(tiles)} clickable tiles in a {len(cols)}x{len(rows)} grid, "
+                        f"expected 40 in 5x8")
+    for x, y, sh in tiles:
         ci, ri = cols.index(x), rows.index(y)
         want_cat, want_pts = CATS[ci], (ri + 1) * 100
-        if pts != want_pts:
-            problems.append(f"board: tile at column {ci+1} row {ri+1} reads {pts}, grid says {want_pts}")
+        txt = sh.text_frame.text.strip() if sh.has_text_frame else ""
+        if txt and txt.isdigit() and int(txt) != want_pts:
+            problems.append(f"board: tile at column {ci+1} row {ri+1} reads {txt}, "
+                            f"grid says {want_pts}")
         dest = target(sh)
-        if dest is None:
-            problems.append(f"board: tile {want_cat} {want_pts} has no link"); continue
         h = head(dest)
         m = re.match(r"(.+?)\s*[·•]\s*(\d+)\s*POINTS", h)
         if not m:
