@@ -51,10 +51,17 @@ def new_doc():
     st.font.name = BODY_FONT
     st.font.size = Pt(11)
     st.element.rPr.rFonts.set(qn("w:eastAsia"), BODY_FONT)
-    for s in doc.sections:
-        s.top_margin = s.bottom_margin = Cm(1.6)
-        s.left_margin = s.right_margin = Cm(1.8)
+    set_page(doc)
     return doc
+
+
+def set_page(doc):
+    """python-docx's default template is US Letter; the whole pack is A4, and a
+    Letter page only shows itself when the file is actually opened."""
+    for sec in doc.sections:
+        sec.page_width, sec.page_height = Cm(21.0), Cm(29.7)
+        sec.top_margin = sec.bottom_margin = Cm(1.6)
+        sec.left_margin = sec.right_margin = Cm(1.8)
 
 
 def para(doc, text="", size=11, bold=False, italic=False, color=None,
@@ -448,6 +455,7 @@ if __name__ == "__main__":
     docs = [(f"{i:02d}-{name}", doc) for i, (name, doc) in enumerate(seq, 1)]
     for name, doc in docs:
         path = os.path.join(OUT, name + ".docx")
+        set_page(doc)                      # covers sections added after new_doc()
         doc.save(path)
         print(f"  docx  {name}.docx  ({os.path.getsize(path) // 1024} KB)")
     print("\nDone.")

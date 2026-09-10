@@ -235,6 +235,17 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
              if len(x.columns) == ncols and len(x.rows) == nrows]
         return [re.sub(r"^[a-h]\)\s*", "", r.cells[c].text.strip()) for r in t[0].rows] if t else []
 
+    # python-docx defaults to US Letter; the pack is A4 throughout
+    wrong = []
+    for f in sorted(os.listdir(DOCX)):
+        if not f.endswith(".docx"):
+            continue
+        sizes = {(round(sec.page_width.cm, 1), round(sec.page_height.cm, 1))
+                 for sec in Document(os.path.join(DOCX, f)).sections}
+        if sizes != {(21.0, 29.7)}:
+            wrong.append(f"{f} {sizes}")
+    check(not wrong, "every Word file is A4 on every section", " | ".join(wrong))
+
     for i, d in enumerate(C.PEOPLE, 1):
         f = os.path.join(DOCX, SHEETFILE[d["slug"]] + ".docx")
         if not os.path.exists(f):
