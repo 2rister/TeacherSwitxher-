@@ -12,7 +12,7 @@ NEWTON = dict(
     slug="isaac-newton", name="Isaac Newton", dates="1642 – 1727",
     tagline="The man who never stopped looking",
     strap="Scientist · Mathematician · Astronomer",
-    portrait="newton.png",
+    portrait="newton.jpg",
     text=[
         "Isaac Newton was born on December 25, 1642, in England. His childhood was difficult. "
         "His father died shortly after he was born. His mother remarried and left him with his "
@@ -114,7 +114,7 @@ LENNON = dict(
     slug="john-lennon", name="John Lennon", dates="1940 – 1980",
     tagline="A voice for peace",
     strap="Musician · Songwriter · Peace activist",
-    portrait="lennon.png",
+    portrait="lennon.jpg",
     text=[
         "John Lennon was born on October 9, 1940, in Liverpool, England. It happened during the war. "
         "He was named John Winston after his grandfather and Prime Minister Churchill. John&#8217;s "
@@ -204,7 +204,7 @@ DIANA = dict(
     slug="princess-diana", name="Princess Diana", dates="1961 – 1997",
     tagline="The People&#8217;s Princess",
     strap="Princess of Wales · Charity worker",
-    portrait="diana.png",
+    portrait="diana.jpg",
     text=[
         "Diana Frances Spencer was born on 1 July 1961 in England. She grew up in a large family "
         "with two older sisters and a younger brother. Her parents divorced when she was young.",
@@ -285,7 +285,7 @@ DARWIN = dict(
     slug="charles-darwin", name="Charles Darwin", dates="1809 &#8211; 1882",
     tagline="Ask questions. Discover the truth.",
     strap="Naturalist &#183; Geologist &#183; Author",
-    portrait="darwin.png", board_is_new=True,
+    portrait="darwin.jpg", board_is_new=True,
     text=[
         "Charles Darwin (1809&#8211;1882) was a British scientist who studied nature and animals "
         "during the Victorian era. He was born in Shrewsbury, England, and died in Kent.",
@@ -364,7 +364,7 @@ NELSON = dict(
     slug="horatio-nelson", name="Horatio Nelson", dates="1758 &#8211; 1805",
     tagline="A national hero at sea",
     strap="Naval officer &#183; Vice-Admiral &#183; National hero",
-    portrait="nelson.png",
+    portrait="nelson.jpg",
     text=[
         "Horatio Nelson was a famous British naval officer who lived from 1758 to 1805. He was born "
         "on 29 September 1758 in a small village called Burnham Thorpe in England.",

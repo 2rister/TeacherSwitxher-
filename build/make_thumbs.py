@@ -16,11 +16,8 @@ PAPER = (243, 232, 208)          # --paper, so the flattened edge disappears int
 SIZE = (480, 600)
 
 for name in ("newton", "lennon", "diana"):
-    src = os.path.join(IMG, f"{name}.png")
-    im = Image.open(src).convert("RGBA")
-    flat = Image.new("RGB", im.size, PAPER)
-    flat.paste(im, mask=im.split()[3])
-    flat = flat.resize(SIZE, Image.LANCZOS)
+    src = os.path.join(IMG, f"{name}.jpg")
+    flat = Image.open(src).convert("RGB").resize(SIZE, Image.LANCZOS)
     dst = os.path.join(IMG, f"{name}-thumb.jpg")
     flat.save(dst, "JPEG", quality=86, optimize=True, progressive=True)
     print(f"  {os.path.basename(dst):<20} {SIZE[0]}x{SIZE[1]}  "
