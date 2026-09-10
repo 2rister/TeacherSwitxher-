@@ -32,6 +32,8 @@ def norm(s):
 
 # Build first: the matching and numbers keys are fixed while the sheets are laid out.
 B.write_html()
+# resolve file names from what the build actually wrote, never from literals
+SHEETFILE = {n.split("-", 1)[1]: n for n, _ in B.SHEETS if not n.startswith("00-")}
 print("\nVerifying the Interesting People A2 pack\n")
 
 # Glossary head-words that appear in the reading in another form.
@@ -99,8 +101,8 @@ print()
 # ------------------------------------------------------- required people only
 print("-- Requirements")
 check({d["name"] for d in C.PEOPLE} ==
-      {"Isaac Newton", "John Lennon", "Princess Diana", "Charles Darwin"},
-      "pack covers Newton, Lennon, Diana and Darwin")
+      {"Isaac Newton", "John Lennon", "Princess Diana", "Charles Darwin", "Horatio Nelson"},
+      "pack covers Newton, Lennon, Diana, Darwin and Nelson")
 for d in C.PEOPLE:
     check(len(d["tf"]) == 8 and len(d["gaps"]) == 8 and len(d["qs"]) == 6 and len(d["match"]) == 5,
           f"{d['name']}: full exercise set (8 T/F, 8 gaps, 6 questions, 5 matches)")
@@ -132,9 +134,11 @@ for f in sorted(os.listdir(HTMLDIR)):
         dupes.append(f"{f}: {m.group(1)[:50]}")
 check(not dupes, "no phrase repeated back to back in any sheet", " | ".join(dupes[:3]))
 
-nums = [d["num"] for d in C.PEOPLE] + ["V", "VI"] + [d["num"] for d in G.GRAMMAR_PEOPLE] + ["X", "XI"]
-ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"]
-check(nums == ROMAN, "sheet numbers run I to XI with no gap or repeat", str(nums))
+nums = ([d["num"] for d in C.PEOPLE] + [B.SHEET["MIXED"], B.SHEET["KEY"]]
+        + [d["num"] for d in G.GRAMMAR_PEOPLE] + [B.SHEET["GMIXED"], B.SHEET["GKEY"]])
+expected = [B.roman(i) for i in range(1, len(nums) + 1)]
+check(nums == expected, f"sheet numbers run I to {expected[-1]} with no gap or repeat", str(nums))
+check(len({n for n, _ in B.SHEETS}) == len(B.SHEETS), "no two sheets share a file name")
 print()
 
 # ------------------------------------------------- Past Simple grammar sheets
@@ -202,7 +206,7 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
         return [re.sub(r"^[a-h]\)\s*", "", r.cells[c].text.strip()) for r in t[0].rows] if t else []
 
     for i, d in enumerate(C.PEOPLE, 1):
-        f = os.path.join(DOCX, f"0{i}-{d['slug']}.docx")
+        f = os.path.join(DOCX, SHEETFILE[d["slug"]] + ".docx")
         if not os.path.exists(f):
             check(False, f"{d['name']}: Word version exists"); continue
         want = [None] * len(d["match"])
@@ -212,9 +216,9 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
               f"{d['name']}: Word matching column is in the same order as the PDF")
 
     # the grammar options are not shuffled, but a Word rebuild could still drift
-    gram_files = [(os.path.join(DOCX, f"0{7 + i}-grammar-{d['slug']}.docx"), d)
-                  for i, d in enumerate(G.GRAMMAR_PEOPLE)]
-    gram_files.append((os.path.join(DOCX, "10-grammar-mixed.docx"), G.MIXED))
+    gram_files = [(os.path.join(DOCX, SHEETFILE[f"grammar-{d['slug']}"] + ".docx"), d)
+                  for d in G.GRAMMAR_PEOPLE]
+    gram_files.append((os.path.join(DOCX, SHEETFILE["grammar-mixed"] + ".docx"), G.MIXED))
     for path, d in gram_files:
         if not os.path.exists(path):
             check(False, f"{d['name']}: Word grammar sheet exists"); continue
@@ -230,7 +234,7 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
         check(not bad, f"{d['name']}: Word test options match the PDF, in order",
               f"items {bad}")
 
-    f = os.path.join(DOCX, "05-mixed-round.docx")
+    f = os.path.join(DOCX, SHEETFILE["mixed-round"] + ".docx")
     if os.path.exists(f):
         want = [None] * len(C.NUMBERS)
         for j, slot in enumerate(C._nums_key):

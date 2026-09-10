@@ -8,7 +8,7 @@ Every sheet is one or more .page divs sized to A4; Chromium prints them at
 exactly 210x297 mm with no scaling. After rendering, each page is measured and
 any content overflow is reported, so a layout can never silently lose a line.
 """
-import os, random, subprocess, sys
+import os, random, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -26,6 +26,51 @@ FOOT_L = "Interesting People &#183; A2"
 FOOT_M = "Ideas &#183; People &#183; Arguments"
 
 rnd = random.Random(20260909)          # fixed seed => identical output every build
+
+
+def roman(n):
+    out = ""
+    for value, sign in ((10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")):
+        while n >= value:
+            out += sign
+            n -= value
+    return out
+
+
+def number_sheets():
+    """Derive every sheet number from the running order.
+
+    Adding a person used to mean hand-editing each numeral after them - in the
+    mastheads, the footers and the prose - which is exactly how a wrong one
+    reaches print. Persons take I..N, then the mixed round, the reading key,
+    the grammar sheets and the grammar key.
+    """
+    n = 1
+    for d in C.PEOPLE:
+        d["num"] = roman(n); n += 1
+    refs = {"MIXED": roman(n)}; n += 1
+    refs["KEY"] = roman(n); n += 1
+    for d in G.GRAMMAR_PEOPLE:
+        d["num"] = roman(n); n += 1
+    G.MIXED["num"] = refs["GMIXED"] = roman(n); n += 1
+    refs["GKEY"] = roman(n)
+    refs["READING"] = f'{C.PEOPLE[0]["num"]}&#8211;{C.PEOPLE[-1]["num"]}'
+    refs["GRAMMAR"] = f'{G.GRAMMAR_PEOPLE[0]["num"]}&#8211;{G.GRAMMAR_PEOPLE[-1]["num"]}'
+    for d in C.PEOPLE:
+        refs["#" + d["slug"]] = d["num"]
+    return refs
+
+
+SHEET = {}
+
+
+def subst(text):
+    """Resolve [[TOKEN]] sheet references inside static prose."""
+    for k, v in SHEET.items():
+        text = text.replace(f"[[{k}]]", v)
+    left = re.findall(r"\[\[[^\]]+\]\]", text)
+    assert not left, f"unresolved sheet reference: {left}"
+    return text
 
 
 def shuffled_rhs(pairs):
@@ -124,7 +169,7 @@ def mixed_sheet():
         for t, ps in C.DEBATE['phrases'])
 
     p1 = f"""<div class="page">
-{R.masthead("The Mixed Round &#183; Newton &#183; Lennon &#183; Diana", "V")}
+{R.masthead("The Mixed Round &#183; Newton &#183; Lennon &#183; Diana", SHEET["MIXED"])}
 <div class="tasks">
 {R.task(1, "Who is it?", "N = Newton &#183; L = Lennon &#183; D = Diana",
         f'<ol class="items">{who}</ol>')}
@@ -134,11 +179,11 @@ def mixed_sheet():
         f'<div class="match"><ol class="items">{nums_l}</ol>'
         f'<ol class="items rhs">{nums_r}</ol></div>')}
 </div>
-{R.foot(FOOT_L, FOOT_M, "Sheet V &#183; p. 1")}
+{R.foot(FOOT_L, FOOT_M, f"Sheet {SHEET['MIXED']} &#183; p. 1")}
 </div>"""
 
     p2 = f"""<div class="page">
-{R.masthead("Final Round &#183; Speak &#183; Reason &#183; Persuade &#183; Respect", "V")}
+{R.masthead("Final Round &#183; Speak &#183; Reason &#183; Persuade &#183; Respect", SHEET["MIXED"])}
 <div class="tasks">
 {R.task(4, "Final Jeopardy &#183; Speaking", "Work in pairs, then tell the class.",
         f'<p style="margin:0 0 2.6mm;font-size:11.4pt;"><b>{C.DEBATE["question"]}</b></p>'
@@ -154,7 +199,7 @@ def mixed_sheet():
               "Elizabeth I &#8594; Newton &#8594; Nelson &#8594; Lennon &#8594; Diana.")],
             title="Bonus points"))}
 </div>
-{R.foot(FOOT_L, FOOT_M, "Sheet V &#183; p. 2")}
+{R.foot(FOOT_L, FOOT_M, f"Sheet {SHEET['MIXED']} &#183; p. 2")}
 </div>"""
     return R.head("The Mixed Round &#8211; A2") + p1 + p2 + "</body></html>"
 
@@ -228,24 +273,24 @@ def grammar_key():
     irr = " &#183; ".join(f"<b>{a}</b> &#8594; {b}" for a, b in G.IRREGULAR)
 
     p1 = f"""<div class="page">
-{R.masthead("Grammar Answer Key &#183; For the teacher", "XI")}
+{R.masthead("Grammar Answer Key &#183; For the teacher", SHEET["GKEY"])}
 <div class="key-grid">{''.join(blocks[:2])}</div>
 <div style="height:3mm"></div>
 <div class="key-grid">{''.join(blocks[2:])}</div>
-{R.foot("Grammar Key", FOOT_M, "Sheet XI &#183; p. 1")}
+{R.foot("Grammar Key", FOOT_M, f"Sheet {SHEET['GKEY']} &#183; p. 1")}
 </div>"""
     p2 = f"""<div class="page">
-{R.masthead("Grammar Key &#183; Irregular verbs &amp; notes", "XI")}
+{R.masthead("Grammar Key &#183; Irregular verbs &amp; notes", SHEET["GKEY"])}
 <h2 style="font-family:Cinzel,serif;font-size:12pt;letter-spacing:.16em;color:#1b2a4a;
-           margin:0 0 3mm;text-transform:uppercase">Sheet X &#183; task 4</h2>
+           margin:0 0 3mm;text-transform:uppercase">Sheet {SHEET["GMIXED"]} &#183; task 4</h2>
 <p style="font-size:10.4pt;line-height:1.7;margin:0 0 4mm">{irr}</p>
-<div class="note"><b>How these sheets relate to Sheets I&#8211;V</b>{G.GRAMMAR_NOTE}</div>
+<div class="note"><b>How these sheets relate to Sheets {SHEET["READING"]}</b>{subst(G.GRAMMAR_NOTE)}</div>
 <div class="note" style="border-left-color:#1b2a4a;background:rgba(27,42,74,.055)">
 <b>Marking the negatives and questions</b>
 Both the full and the contracted form are correct: <i>did not like</i> and <i>didn&#8217;t like</i>
 are equally right, and so are <i>was not</i> and <i>wasn&#8217;t</i>. The key prints both, separated
 by a slash. In task 2 the capital letter at the start of a question is part of the answer.</div>
-{R.foot("Grammar Key", FOOT_M, "Sheet XI &#183; p. 2")}
+{R.foot("Grammar Key", FOOT_M, f"Sheet {SHEET['GKEY']} &#183; p. 2")}
 </div>"""
     return R.head("Grammar answer key") + p1 + p2 + "</body></html>"
 
@@ -283,7 +328,7 @@ def key_sheet():
     tl_num = " &#183; ".join(f"<b>{rank[n]}</b>" for n, _ in C.TIMELINE)
     nums = " &#183; ".join(f'{i} <b>{L(k)}</b>' for i, k in enumerate(C._nums_key, 1))
     blocks.append(f"""<div class="key-block">
-<h3>Sheet V &#183; The Mixed Round</h3>
+<h3>Sheet {SHEET["MIXED"]} &#183; The Mixed Round</h3>
 <p style="margin:0 0 1.4mm;font-size:9.9pt"><span class="key-tag">1 WHO IS IT?</span> {who}</p>
 <p style="margin:0 0 1.4mm;font-size:9.9pt"><span class="key-tag">2 ORDER</span> {tl}</p>
 <p style="margin:0 0 1.4mm;font-size:9.4pt;color:#5a4a38">Numbers to write in the boxes,
@@ -294,26 +339,41 @@ No single correct answer. Accept any person if the student gives a reason
 <i>and</i> an example from the text.</p>
 </div>""")
 
-    notes = "".join(f"<div class='note'><b>{t}</b>{b}</div>" for t, b in C.TEACHER_NOTES)
+    off = [d for d in C.PEOPLE if d.get("board_is_new")]
+    offboard = ""
+    if off:
+        who = ", ".join(f'{d["name"]} (Sheet {d["num"]})' for d in off)
+        offboard = (f" The exception{'s are' if len(off) > 1 else ' is'} {who} &#8211; "
+                    "not on your board at all, so task 5 there offers three questions "
+                    "you can add to it instead.")
+    notes = "".join(f"<div class='note'><b>{t}</b>{subst(b)}</div>" for t, b in C.TEACHER_NOTES)
 
-    p1 = f"""<div class="page">
-{R.masthead("Answer Key &#183; For the teacher", "VI")}
-<div class="key-grid">{''.join(blocks[:2])}</div>
-<div style="height:3mm"></div>
-<div class="key-grid">{''.join(blocks[2:])}</div>
-{R.foot("Answer Key", FOOT_M, "Sheet VI &#183; p. 1")}
-</div>"""
+    GAP = '<div style="height:3mm"></div>'
+    per, pages = 4, []
+    chunks = [blocks[i:i + per] for i in range(0, len(blocks), per)]
+    for pno, chunk in enumerate(chunks, 1):
+        rows = []
+        for i in range(0, len(chunk), 2):
+            rows.append('<div class="key-grid">' + "".join(chunk[i:i + 2]) + "</div>")
+            if i + 2 < len(chunk):
+                rows.append(GAP)
+        body = "".join(rows)
+        pages.append(f"""<div class="page">
+{R.masthead("Answer Key &#183; For the teacher", SHEET["KEY"])}
+{body}
+{R.foot("Answer Key", FOOT_M, f"Sheet {SHEET['KEY']} &#183; p. {pno}")}
+</div>""")
+    p1 = "".join(pages)
 
     p2 = f"""<div class="page">
-{R.masthead("Teacher&#8217;s Notes &#183; Checks &amp; Corrections", "VI")}
+{R.masthead("Teacher&#8217;s Notes &#183; Checks &amp; Corrections", SHEET["KEY"])}
 <h2 style="font-family:Cinzel,serif;font-size:12pt;letter-spacing:.16em;color:#1b2a4a;
            margin:0 0 3mm;text-transform:uppercase">Before you print</h2>
 {notes}
 <div class="note" style="border-left-color:#1b2a4a;background:rgba(27,42,74,.055)">
 <b>How the pack maps onto the game</b>
-Every item on Sheets I&#8211;III and V is built on a fact that appears on the Jeopardy board, so the
-handouts and the game test the same knowledge. Charles Darwin (Sheet IV) is the exception &#8211; he is
-not on your board at all, so task 5 there offers three questions you can add to it instead.
+Every item on the person sheets and on the Mixed Round is built on a fact that appears on the Jeopardy
+board, so the handouts and the game test the same knowledge.{offboard}
 Suggested order: read the sheet &#8594; do the exercises &#8594; play the game with the texts face down.</div>
 <div class="note" style="border-left-color:#b08d57;background:rgba(176,141,87,.09)">
 <b>Image credits &amp; licences</b>
@@ -328,7 +388,7 @@ this pack reproduces it in duotone as a derivative work under the same licence.
 Via Wikimedia Commons.<br>
 Type: Cinzel, Playfair Display, EB Garamond &#8211; SIL Open Font License 1.1.
 </span></div>
-{R.foot("Answer Key", FOOT_M, "Sheet VI &#183; p. 2")}
+{R.foot("Answer Key", FOOT_M, f"Sheet {SHEET['KEY']} &#183; p. {len(chunks) + 1}")}
 </div>"""
     return R.head("Answer Key &#8211; A2") + p1 + p2 + "</body></html>"
 
@@ -338,16 +398,15 @@ SHEETS = []
 
 
 def write_html():
+    SHEET.update(number_sheets())
     """Order matters: person sheets fix the matching keys, the mixed sheet fixes
     the numbers key, and the answer key reads both."""
     os.makedirs(OUT_HTML, exist_ok=True)
-    SHEETS[:] = [(f"0{i+1}-{d['slug']}", person_sheet(d)) for i, d in enumerate(C.PEOPLE)]
-    SHEETS.append(("05-mixed-round", mixed_sheet()))
-    SHEETS.append(("06-answer-key", key_sheet()))
-    SHEETS.extend((f"0{7 + i}-grammar-{d['slug']}", grammar_sheet(d))
-                  for i, d in enumerate(G.GRAMMAR_PEOPLE))
-    SHEETS.append(("10-grammar-mixed", grammar_mixed()))
-    SHEETS.append(("11-grammar-answer-key", grammar_key()))
+    seq = ([(d["slug"], person_sheet(d)) for d in C.PEOPLE]
+           + [("mixed-round", mixed_sheet()), ("answer-key", key_sheet())]
+           + [(f"grammar-{d['slug']}", grammar_sheet(d)) for d in G.GRAMMAR_PEOPLE]
+           + [("grammar-mixed", grammar_mixed()), ("grammar-answer-key", grammar_key())])
+    SHEETS[:] = [(f"{i:02d}-{name}", html) for i, (name, html) in enumerate(seq, 1)]
     # one file with every sheet, for printing the whole pack in a single job
     body = "".join(h[h.index("<body>") + 6: h.index("</body>")] for _, h in SHEETS)
     SHEETS.insert(0, ("00-complete-pack",

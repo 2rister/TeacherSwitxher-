@@ -9,7 +9,7 @@ game test exactly the same knowledge.
 
 # ---------------------------------------------------------------- Isaac Newton
 NEWTON = dict(
-    slug="isaac-newton", num="I", name="Isaac Newton", dates="1642 – 1727",
+    slug="isaac-newton", name="Isaac Newton", dates="1642 – 1727",
     tagline="The man who never stopped looking",
     strap="Scientist · Mathematician · Astronomer",
     portrait="newton.png",
@@ -111,7 +111,7 @@ NEWTON = dict(
 
 # ----------------------------------------------------------------- John Lennon
 LENNON = dict(
-    slug="john-lennon", num="II", name="John Lennon", dates="1940 – 1980",
+    slug="john-lennon", name="John Lennon", dates="1940 – 1980",
     tagline="A voice for peace",
     strap="Musician · Songwriter · Peace activist",
     portrait="lennon.png",
@@ -201,7 +201,7 @@ LENNON = dict(
 
 # ------------------------------------------------------------- Princess Diana
 DIANA = dict(
-    slug="princess-diana", num="III", name="Princess Diana", dates="1961 – 1997",
+    slug="princess-diana", name="Princess Diana", dates="1961 – 1997",
     tagline="The People&#8217;s Princess",
     strap="Princess of Wales · Charity worker",
     portrait="diana.png",
@@ -282,7 +282,7 @@ DIANA = dict(
 # Darwin is the one person here who is NOT on the Jeopardy board, so his sheet
 # offers three ready items to ADD to the game instead of calling back to it.
 DARWIN = dict(
-    slug="charles-darwin", num="IV", name="Charles Darwin", dates="1809 &#8211; 1882",
+    slug="charles-darwin", name="Charles Darwin", dates="1809 &#8211; 1882",
     tagline="Ask questions. Discover the truth.",
     strap="Naturalist &#183; Geologist &#183; Author",
     portrait="darwin.png", board_is_new=True,
@@ -358,7 +358,83 @@ DARWIN = dict(
     ],
 )
 
-PEOPLE = [NEWTON, LENNON, DIANA, DARWIN]
+
+# ----------------------------------------------------------- Horatio Nelson
+NELSON = dict(
+    slug="horatio-nelson", name="Horatio Nelson", dates="1758 &#8211; 1805",
+    tagline="A national hero at sea",
+    strap="Naval officer &#183; Vice-Admiral &#183; National hero",
+    portrait="nelson.png",
+    text=[
+        "Horatio Nelson was a famous British naval officer who lived from 1758 to 1805. He was born "
+        "on 29 September 1758 in a small village called Burnham Thorpe in England.",
+
+        "Nelson joined the Royal Navy when he was only 12 years old. He loved the sea and wanted to "
+        "become a brave and successful sailor. Nelson was not very tall, but he was a strong leader "
+        "with great courage.",
+
+        "During his career, he fought in many important battles at sea. He lost the sight in his "
+        "right eye during a battle in 1794. In 1797, he lost his right arm during the Battle of "
+        "Santa Cruz de Tenerife. Even after these injuries, Nelson returned to the sea and continued "
+        "his career. He became famous for his clever plans and unusual ideas in naval battles.",
+
+        "One of his greatest victories came at the Battle of the Nile in 1798. In this battle, "
+        "Nelson defeated a large French fleet in Egypt. His most famous battle was the Battle of "
+        "Trafalgar on 21 October 1805. Nelson led the British fleet against the French and Spanish "
+        "fleets near the coast of Spain. The British won the battle, but Nelson was badly wounded by "
+        "an enemy bullet. He died on his ship, HMS Victory, on the same day at the age of 47.",
+
+        "Nelson became a national hero, and people still remember him for his courage and "
+        "leadership. Today, Nelson&#8217;s Column in Trafalgar Square, London, is a famous monument "
+        "to this remarkable sailor.",
+    ],
+    pull="He lost an eye and an arm, and went back to sea.",
+    tf=[
+        ("Nelson was born in a big city.", "F"),
+        ("Nelson joined the Royal Navy when he was 12.", "T"),
+        ("Nelson was a very tall man.", "F"),
+        ("Nelson&#8217;s father was also a sailor.", "NG"),
+        ("Nelson lost his right arm in 1797.", "T"),
+        ("Nelson stopped working after his injuries.", "F"),
+        ("The Battle of Trafalgar took place in 1805.", "T"),
+        ("Nelson died on his ship.", "T"),
+    ],
+    bank=["arm", "courage", "eye", "fleet", "monument", "Navy", "Trafalgar", "Victory"],
+    gaps=[
+        ("Nelson joined the Royal ____________ when he was 12.", "Navy"),
+        ("He lost the sight in his right ____________ during a battle in 1794.", "eye"),
+        ("In 1797 he lost his right ____________ .", "arm"),
+        ("At the Battle of the Nile he defeated a large French ____________ .", "fleet"),
+        ("His most famous battle was the Battle of ____________ .", "Trafalgar"),
+        ("Nelson died on his ship, HMS ____________ .", "Victory"),
+        ("People remember him for his ____________ and leadership.", "courage"),
+        ("Nelson&#8217;s Column is a famous ____________ in London.", "monument"),
+    ],
+    qs=[
+        ("Where was Nelson born?", "In Burnham Thorpe, a small village in England."),
+        ("How old was Nelson when he joined the Royal Navy?", "He was 12."),
+        ("What happened to Nelson in 1794 and in 1797?",
+         "He lost the sight in his right eye in 1794 and his right arm in 1797."),
+        ("Which fleet did Nelson defeat at the Battle of the Nile?", "A large French fleet."),
+        ("What was the name of Nelson&#8217;s ship?", "HMS Victory."),
+        ("Which monument in London remembers Nelson?",
+         "Nelson&#8217;s Column in Trafalgar Square."),
+    ],
+    match=[
+        ("Nelson joined the Royal Navy", "when he was only 12 years old."),
+        ("He lost the sight in his right eye", "during a battle in 1794."),
+        ("At the Battle of the Nile Nelson", "defeated a large French fleet in Egypt."),
+        ("At Trafalgar the British won, but Nelson", "was badly wounded by an enemy bullet."),
+        ("Nelson&#8217;s Column in Trafalgar Square", "is a famous monument to this sailor."),
+    ],
+    jeopardy=[
+        (100, "What was Nelson&#8217;s job?", "He was a naval officer / sailor."),
+        (200, "Who was born in England on 29 September 1758?", "Horatio Nelson."),
+        (300, "Who became a national hero in Britain?", "Horatio Nelson."),
+    ],
+)
+
+PEOPLE = [NEWTON, LENNON, DIANA, DARWIN, NELSON]
 
 # -------------------------------------------------------- Sheet V: mixed round
 # "Who is it?" items are taken straight from the Jeopardy board.
@@ -413,7 +489,7 @@ TEACHER_NOTES = [
     ("Wild Card 600 &#8211; wrong answer on the game slide",
      "The board answers &#8220;Newton &#8594; Nelson &#8594; Elizabeth &#8594; Lennon &#8594; Diana&#8221;. "
      "By year of birth the correct order is Elizabeth I (1533) &#8594; Newton (1642) &#8594; "
-     "Nelson (1758) &#8594; Lennon (1940) &#8594; Diana (1961). Task 2 on Sheet V uses the corrected order."),
+     "Nelson (1758) &#8594; Lennon (1940) &#8594; Diana (1961). Task 2 on Sheet [[MIXED]] uses the corrected order."),
     ("Childhood &amp; Early Life 300 &#8211; pronoun mismatch",
      "The slide asks &#8220;Who was raised by <i>her</i> strict aunt Mimi?&#8221; but the answer is John Lennon. "
      "It should read <i>his</i>. Corrected in this pack."),
@@ -450,6 +526,16 @@ GLOSSARY = {
         ("to break up", "to stop working together"),
         ("views", "the things a person believes"),
         ("memory", "something that people remember"),
+    ],
+    "horatio-nelson": [
+        ("navy", "the ships and people that protect a country at sea"),
+        ("sailor", "a person who works on a ship"),
+        ("battle", "a fight between armies or ships"),
+        ("fleet", "a large group of ships"),
+        ("courage", "being brave when something is dangerous"),
+        ("wounded", "badly hurt in a battle"),
+        ("hero", "someone people admire for brave actions"),
+        ("monument", "something built to remember a person"),
     ],
     "charles-darwin": [
         ("nature", "plants, animals and everything in the natural world"),
