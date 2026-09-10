@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """HTML fragments shared by every sheet in the pack."""
 
+import re
+
 UNION_JACK = """<svg class="flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
 <clipPath id="uj"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
 <rect width="60" height="30" fill="#0d2a63"/>
@@ -82,3 +84,41 @@ def glossary(items):
     rows = "".join(f"<div><b>{w}</b> &#8211; <span>{d}</span></div>" for w, d in items)
     return ('<section class="glossary"><div class="glossary-head">Words to know</div>'
             f'<div class="glossary-body">{rows}</div></section>')
+
+
+def gram_hero(d, img_dir="../img"):
+    first, last = d["name"].rsplit(" ", 1) if " " in d["name"] else (d["name"], "")
+    pic = (f'<img src="{img_dir}/{d["portrait"]}" alt="{d["name"]}">'
+           if d.get("portrait") else "")
+    return (f'<section class="gram-hero">{pic}<div class="who">'
+            f'<h1>{first} <span class="r">{last}</span></h1>'
+            f'<div class="yrs">{d["dates"]}</div></div>'
+            f'<div class="tense">Past Simple</div></section>')
+
+
+def mc_body(items):
+    rows = []
+    for sentence, opts, _ in items:
+        o = "".join(f'<span><b>{chr(97 + i)})</b>{t}</span>' for i, t in enumerate(opts))
+        rows.append(f'<li>{sentence}<div class="mc-opts">{o}</div></li>')
+    return f'<ol class="mc">{"".join(rows)}</ol>'
+
+
+def bracket_body(items):
+    rows = []
+    for sentence, _ in items:
+        s = sentence.replace("__________", '<span class="gap"></span>')
+        s = re.sub(r"\(([^)]*)\)", r'(<span class="cue">\1</span>)', s)
+        rows.append(f"<li>{s}</li>")
+    return f'<ol class="brackets">{"".join(rows)}</ol>'
+
+
+def irregular_body(pairs):
+    cells = "".join(f"<div><b>{a}</b><br>&#8594; ______________</div>" for a, _ in pairs)
+    return f'<div class="irreg">{cells}</div>'
+
+
+def word_order_body(items):
+    rows = "".join(f'<li><span class="scrambled">{q}</span>'
+                   f'<span class="answer-rule"></span></li>' for q, _ in items)
+    return f'<ol class="items wordorder">{rows}</ol>'

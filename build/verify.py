@@ -10,6 +10,7 @@ import os, re, sys, html
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import content as C
+import grammar as G
 import build as B
 
 fails, checks = [], 0
@@ -103,6 +104,59 @@ for d in C.PEOPLE:
     check(len(d["tf"]) == 8 and len(d["gaps"]) == 8 and len(d["qs"]) == 6 and len(d["match"]) == 5,
           f"{d['name']}: full exercise set (8 T/F, 8 gaps, 6 questions, 5 matches)")
 
+# ------------------------------------------------- Past Simple grammar sheets
+print("-- Past Simple grammar")
+GRAM = G.GRAMMAR_PEOPLE + [G.MIXED]
+for d in GRAM:
+    n = d["name"]
+    check(all(len(o) == 3 for _, o, _ in d["mc"]), f"{n}: every test item has three options")
+    check(all(len(set(o)) == 3 for _, o, _ in d["mc"]), f"{n}: no repeated option inside an item")
+    check(all(0 <= k < len(o) for _, o, k in d["mc"]), f"{n}: every answer key points at a real option")
+    check(all("____" in q for q, _, _ in d["mc"]), f"{n}: every test sentence has a gap")
+    check(len({norm(q) for q, _, _ in d["mc"]}) == len(d["mc"]),
+          f"{n}: no repeated sentence in the test")
+    keys = [chr(97 + k) for _, _, k in d["mc"]]
+    check(len(set(keys)) == 3, f"{n}: the key uses a, b and c", str(sorted(set(keys))))
+    top = max(keys.count(x) for x in "abc") / len(keys)
+    check(top <= 0.60, f"{n}: no single letter dominates the key",
+          f"{ {x: keys.count(x) for x in 'abc'} } = {top:.0%}")
+
+    # a two-gap sentence must carry two answers, or the key mis-reads as alternatives
+    bad = [q for q, a in d["bracket"]
+           if q.count("__________") != (1 if isinstance(a, str) else len(a))]
+    check(not bad, f"{n}: gaps and answers line up in task 'Past Simple'",
+          " | ".join(norm(x)[:50] for x in bad))
+    check(all(re.search(r"\([^)]+\)", q) for q, _ in d["bracket"]),
+          f"{n}: every Past Simple item shows the verb in brackets")
+print()
+
+print("-- Grammar support material")
+# scrambled words must be exactly the words of the answer, or the item is unsolvable
+for scram, ans in G.WORD_ORDER:
+    chunks = [w.strip() for w in html.unescape(scram).split("/") if w.strip()]
+    a = html.unescape(ans).strip()
+    words = a.rstrip("?").split()
+    ok = ("?" in chunks
+          and sum(len(c.split()) for c in chunks if c != "?") == len(words)
+          and all(c.lower() in a.lower() for c in chunks if c != "?"))
+    check(ok, f"word order solvable: {a}", f"chunks {chunks}")
+
+used = " ".join(
+    norm(q) + " " + " ".join(norm(o) for o in opts) for d in GRAM for q, opts, _ in d["mc"]
+) + " " + " ".join(norm(q) for d in GRAM for q, _ in d["bracket"])
+# A verb counts as practised whether it turns up as the infinitive (in a bracket
+# cue) or as its past form (as a test option) — "had" and "sang" only ever appear
+# as forms, which is exactly what the table asks students to produce.
+def practised(inf, past):
+    forms = [inf] + [x.strip() for x in past.split("/")]
+    return any(re.search(rf"\b{re.escape(f)}\b", used) for f in forms)
+
+missing = [v for v, pa in G.IRREGULAR if not practised(v, pa)]
+check(not missing, "every verb in the irregular table is practised on the sheets",
+      ", ".join(missing))
+check(len({v for v, _ in G.IRREGULAR}) == len(G.IRREGULAR), "no repeated verb in the irregular table")
+print()
+
 # ------------------------------------------------- Word versions, when present
 DOCX = os.path.join(os.path.dirname(HERE), "materials", "docx")
 if os.path.isdir(DOCX) and os.listdir(DOCX):
@@ -123,6 +177,25 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
             want[slot] = html.unescape(re.sub("<[^>]+>", "", d["match"][j][1]))
         check(col(f, 4, len(d["match"]), 3) == want,
               f"{d['name']}: Word matching column is in the same order as the PDF")
+
+    # the grammar options are not shuffled, but a Word rebuild could still drift
+    gram_files = [(os.path.join(DOCX, f"0{6 + i}-grammar-{d['slug']}.docx"), d)
+                  for i, d in enumerate(G.GRAMMAR_PEOPLE)]
+    gram_files.append((os.path.join(DOCX, "09-grammar-mixed.docx"), G.MIXED))
+    for path, d in gram_files:
+        if not os.path.exists(path):
+            check(False, f"{d['name']}: Word grammar sheet exists"); continue
+        lines = [p.text for p in Document(path).paragraphs]
+        bad = []
+        for i, (_, opts, _) in enumerate(d["mc"], 1):
+            want = "".join(f"    {chr(97 + j)}) "
+                           f"{html.unescape(re.sub('<[^>]+>', '', o))}"
+                           for j, o in enumerate(opts))
+            cand = [l for l in lines if l.startswith(f"{i}.  ") and " a) " in l]
+            if not cand or want not in cand[0]:
+                bad.append(i)
+        check(not bad, f"{d['name']}: Word test options match the PDF, in order",
+              f"items {bad}")
 
     f = os.path.join(DOCX, "04-mixed-round.docx")
     if os.path.exists(f):

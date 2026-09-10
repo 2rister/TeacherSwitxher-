@@ -18,6 +18,7 @@ OUT_BW = os.path.join(ROOT, "materials", "pdf-bw")
 sys.path.insert(0, HERE)
 
 import content as C
+import grammar as G
 import render as R
 
 KICKER = "Interesting People &#183; Reading &amp; Facts &#183; Level A2"
@@ -154,6 +155,97 @@ def mixed_sheet():
     return R.head("The Mixed Round &#8211; A2") + p1 + p2 + "</body></html>"
 
 
+# ------------------------------------------- sheets VI-IX: Past Simple grammar
+GRAM_KICKER = "Past Simple &#183; Grammar &#183; Level A2"
+
+
+def grammar_sheet(d):
+    return R.head(f"{d['name']} &#8211; Past Simple") + f"""<div class="page">
+{R.masthead(GRAM_KICKER, d['num'])}
+{R.gram_hero(d)}
+<div class="tasks">
+{R.task(1, "Choose the correct answer", "Circle a, b or c.", R.mc_body(d['mc']))}
+{R.task(2, "Put the verb into the Past Simple", "Use the verb in brackets.",
+        R.bracket_body(d['bracket']), navy=True)}
+</div>
+{R.foot(FOOT_L, FOOT_M, f"Sheet {d['num']} &#183; p. 1")}
+</div>""" + "</body></html>"
+
+
+def grammar_mixed():
+    d = G.MIXED
+    p1 = f"""<div class="page">
+{R.masthead(GRAM_KICKER, d['num'])}
+{R.gram_hero(d)}
+<div class="tasks">
+{R.task(1, "Choose the correct answer", "Circle a, b or c.", R.mc_body(d['mc']))}
+{R.task(2, "Make the question", "Put the words in the right order.",
+        R.word_order_body(G.WORD_ORDER), navy=True)}
+</div>
+{R.foot(FOOT_L, FOOT_M, f"Sheet {d['num']} &#183; p. 1")}
+</div>"""
+    p2 = f"""<div class="page">
+{R.masthead("Past Simple &#183; All Three Together", d['num'])}
+<div class="tasks">
+{R.task(3, "Put the verb into the Past Simple", "Use the verb in brackets.",
+        R.bracket_body(d['bracket']), navy=True)}
+{R.task(4, "Irregular verbs", "Write the Past Simple form.",
+        R.irregular_body(G.IRREGULAR))}
+</div>
+{R.foot(FOOT_L, FOOT_M, f"Sheet {d['num']} &#183; p. 2")}
+</div>"""
+    return R.head("Past Simple &#8211; all three together") + p1 + p2 + "</body></html>"
+
+
+def grammar_key():
+    blocks = []
+    for d in G.GRAMMAR_PEOPLE + [G.MIXED]:
+        mc = " &#183; ".join(f'{i} <b>{chr(97 + k)}</b>'
+                             for i, (_, _, k) in enumerate(d["mc"], 1))
+        def ans(a):
+            if isinstance(a, str):
+                return a          # "/" here separates full and contracted forms
+            return "  ".join(f'<span class="key-tag">({i})</span> {x}'
+                             for i, x in enumerate(a, 1))   # one entry per gap
+        br = "".join(f"<li>{ans(a)}</li>" for _, a in d["bracket"])
+        wo = ""
+        if d is G.MIXED:
+            items = "".join(f"<li>{a}</li>" for _, a in G.WORD_ORDER)
+            wo = ('<p style="margin:0 0 .6mm;font-size:9.9pt">'
+                  '<span class="key-tag">2 MAKE THE QUESTION</span></p>'
+                  f"<ol>{items}</ol>")
+        blocks.append(f"""<div class="key-block">
+<h3>Sheet {d['num']} &#183; {d['name']}</h3>
+<p style="margin:0 0 1.4mm;font-size:9.9pt"><span class="key-tag">1 CHOOSE</span> {mc}</p>
+{wo}
+<p style="margin:0 0 .6mm;font-size:9.9pt"><span class="key-tag">{'3' if d is G.MIXED else '2'} PAST SIMPLE</span></p>
+<ol>{br}</ol>
+</div>""")
+    irr = " &#183; ".join(f"<b>{a}</b> &#8594; {b}" for a, b in G.IRREGULAR)
+
+    p1 = f"""<div class="page">
+{R.masthead("Grammar Answer Key &#183; For the teacher", "X")}
+<div class="key-grid">{''.join(blocks[:2])}</div>
+<div style="height:3mm"></div>
+<div class="key-grid">{''.join(blocks[2:])}</div>
+{R.foot("Grammar Key", FOOT_M, "Sheet X &#183; p. 1")}
+</div>"""
+    p2 = f"""<div class="page">
+{R.masthead("Grammar Key &#183; Irregular verbs &amp; notes", "X")}
+<h2 style="font-family:Cinzel,serif;font-size:12pt;letter-spacing:.16em;color:#1b2a4a;
+           margin:0 0 3mm;text-transform:uppercase">Sheet IX &#183; task 3</h2>
+<p style="font-size:10.4pt;line-height:1.7;margin:0 0 4mm">{irr}</p>
+<div class="note"><b>How these sheets relate to Sheets I&#8211;IV</b>{G.GRAMMAR_NOTE}</div>
+<div class="note" style="border-left-color:#1b2a4a;background:rgba(27,42,74,.055)">
+<b>Marking the negatives and questions</b>
+Both the full and the contracted form are correct: <i>did not like</i> and <i>didn&#8217;t like</i>
+are equally right, and so are <i>was not</i> and <i>wasn&#8217;t</i>. The key prints both, separated
+by a slash. In task 2 the capital letter at the start of a question is part of the answer.</div>
+{R.foot("Grammar Key", FOOT_M, "Sheet X &#183; p. 2")}
+</div>"""
+    return R.head("Grammar answer key") + p1 + p2 + "</body></html>"
+
+
 # ------------------------------------------------------------ sheet V: key
 def L(i):
     return chr(ord("a") + i)
@@ -247,6 +339,10 @@ def write_html():
     SHEETS[:] = [(f"0{i+1}-{d['slug']}", person_sheet(d)) for i, d in enumerate(C.PEOPLE)]
     SHEETS.append(("04-mixed-round", mixed_sheet()))
     SHEETS.append(("05-answer-key", key_sheet()))
+    SHEETS.extend((f"0{6 + i}-grammar-{d['slug']}", grammar_sheet(d))
+                  for i, d in enumerate(G.GRAMMAR_PEOPLE))
+    SHEETS.append(("09-grammar-mixed", grammar_mixed()))
+    SHEETS.append(("10-grammar-answer-key", grammar_key()))
     # one file with every sheet, for printing the whole pack in a single job
     body = "".join(h[h.index("<body>") + 6: h.index("</body>")] for _, h in SHEETS)
     SHEETS.insert(0, ("00-complete-pack",

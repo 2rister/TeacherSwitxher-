@@ -24,6 +24,7 @@ IMG = os.path.join(ROOT, "materials", "img")
 sys.path.insert(0, HERE)
 
 import content as C
+import grammar as G
 import build as B
 
 RED = RGBColor(0x9D, 0x22, 0x26)
@@ -77,7 +78,7 @@ def task_head(doc, no, title, hint):
     p = doc.add_paragraph()
     p.paragraph_format.space_before = Pt(12)
     p.paragraph_format.space_after = Pt(4)
-    r = p.add_run(f"{no}.  {title.upper()}")
+    r = p.add_run(f"TASK {no}   {title.upper()}")
     r.bold = True
     r.font.size = Pt(12)
     r.font.color.rgb = NAVY
@@ -347,6 +348,93 @@ def key_doc():
     return doc
 
 
+def grammar_doc(d, mixed=False):
+    doc = new_doc()
+    para(doc, "PAST SIMPLE  ·  GRAMMAR  ·  LEVEL A2", size=9, bold=True, color=GREY,
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=8)
+    para(doc, txt(d["name"]).upper(), size=18, bold=True, color=NAVY, space_after=1)
+    para(doc, txt(d["dates"]), size=10.5, bold=True, color=RED, space_after=10)
+
+    task_head(doc, 1, "Choose the correct answer", "Circle a, b or c.")
+    for i, (sentence, opts, _) in enumerate(d["mc"], 1):
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(5)
+        p.paragraph_format.left_indent = Cm(0.7)
+        p.add_run(f"{i}.  ").bold = True
+        p.add_run(txt(sentence).replace("____", "_" * 8)).font.size = Pt(11)
+        for j, o in enumerate(opts):
+            lab = p.add_run(f"    {chr(97 + j)}) ")
+            lab.bold = True
+            lab.font.size = Pt(10)
+            lab.font.color.rgb = RED
+            p.add_run(txt(o)).font.size = Pt(10.5)
+
+    nxt = 2
+    if mixed:
+        task_head(doc, 2, "Make the question", "Put the words in the right order.")
+        for i, (scram, _) in enumerate(G.WORD_ORDER, 1):
+            p = doc.add_paragraph()
+            p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.left_indent = Cm(0.7)
+            p.add_run(f"{i}.  ").bold = True
+            r = p.add_run(txt(scram)); r.italic = True; r.font.size = Pt(11)
+            q = doc.add_paragraph()
+            q.paragraph_format.space_after = Pt(6)
+            q.paragraph_format.left_indent = Cm(1.2)
+            q.add_run("." * 96).font.color.rgb = GREY
+        nxt = 3
+
+    task_head(doc, nxt, "Put the verb into the Past Simple", "Use the verb in brackets.")
+    for i, (sentence, _) in enumerate(d["bracket"], 1):
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(8)
+        p.paragraph_format.left_indent = Cm(0.7)
+        p.add_run(f"{i}.  ").bold = True
+        p.add_run(txt(sentence).replace("__________", "_" * 18)).font.size = Pt(11)
+
+    if mixed:
+        task_head(doc, 4, "Irregular verbs", "Write the Past Simple form.")
+        t = grid(doc, (len(G.IRREGULAR) + 1) // 2, 4, widths=[3.6, 4.8, 3.6, 4.8])
+        for i, (inf, _) in enumerate(G.IRREGULAR):
+            r, c = i // 2, (i % 2) * 2
+            cell_text(t.cell(r, c), txt(inf), bold=True, color=RED)
+            cell_text(t.cell(r, c + 1), "")
+    return doc
+
+
+def grammar_key_doc():
+    doc = new_doc()
+    para(doc, "GRAMMAR ANSWER KEY  ·  FOR THE TEACHER", size=14, bold=True, color=NAVY,
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=10)
+    for d in G.GRAMMAR_PEOPLE + [G.MIXED]:
+        para(doc, f"SHEET {d['num']}  ·  {txt(d['name']).upper()}",
+             size=12, bold=True, color=NAVY, space_before=10, space_after=4)
+        para(doc, "1  Choose:  " + "   ".join(f"{i}{chr(97 + k)}"
+                                              for i, (_, _, k) in enumerate(d["mc"], 1)), size=10.5)
+        n = 2
+        if d is G.MIXED:
+            para(doc, "2  Make the question:", size=10.5, bold=True, space_after=1)
+            for i, (_, a) in enumerate(G.WORD_ORDER, 1):
+                para(doc, f"     {i}. {txt(a)}", size=10.5, space_after=1)
+            n = 3
+        para(doc, f"{n}  Past Simple:", size=10.5, bold=True, space_before=3, space_after=1)
+        for i, (_, a) in enumerate(d["bracket"], 1):
+            val = txt(a) if isinstance(a, str) else "   ".join(
+                f"({j}) {txt(x)}" for j, x in enumerate(a, 1))
+            para(doc, f"     {i}. {val}", size=10.5, space_after=1)
+
+    para(doc, "SHEET IX  ·  TASK 4  ·  IRREGULAR VERBS", size=12, bold=True, color=NAVY,
+         space_before=12, space_after=4)
+    para(doc, "   ".join(f"{a} \u2192 {b}" for a, b in G.IRREGULAR), size=10.5)
+    para(doc, "NOTES", size=12, bold=True, color=RED, space_before=12, space_after=3)
+    para(doc, txt(G.GRAMMAR_NOTE), size=10.5)
+    para(doc, "Both the full and the contracted form are correct: did not like and didn't like "
+              "are equally right, and so are was not and wasn't. In task 'Make the question' and "
+              "in question items, the capital letter is part of the answer.",
+         size=10.5, space_before=6)
+    return doc
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     B.write_html()          # fixes the matching and numbers keys, exactly as the PDFs use them
@@ -354,6 +442,10 @@ if __name__ == "__main__":
     docs = [(f"0{i + 1}-{d['slug']}", person_doc(d)) for i, d in enumerate(C.PEOPLE)]
     docs.append(("04-mixed-round", mixed_doc()))
     docs.append(("05-answer-key", key_doc()))
+    docs += [(f"0{6 + i}-grammar-{d['slug']}", grammar_doc(d))
+             for i, d in enumerate(G.GRAMMAR_PEOPLE)]
+    docs.append(("09-grammar-mixed", grammar_doc(G.MIXED, mixed=True)))
+    docs.append(("10-grammar-answer-key", grammar_key_doc()))
     for name, doc in docs:
         path = os.path.join(OUT, name + ".docx")
         doc.save(path)
