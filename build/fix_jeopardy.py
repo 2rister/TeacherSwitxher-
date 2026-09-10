@@ -10,6 +10,10 @@
 2. CONTENT.
    - Childhood & Early Life 300 asked "Who was raised by HER strict aunt Mimi?"
      with the answer John Lennon.
+   - Five "who is it" questions gave the answer away with a pronoun: "his aunt",
+     "his grandmother", "his right arm". With three men and two women on the
+     board that halves the field before anyone thinks. All five are rewritten
+     without a pronoun; the answers are unchanged.
    - Wild Card 600 asks for the five people oldest first and answered
      "Newton -> Nelson -> Elizabeth -> Lennon -> Diana". By year of birth
      Elizabeth I (1533) comes before Newton (1642).
@@ -99,7 +103,16 @@ def edit_text(slide_no, old, new):
     parts[key] = ser(tree)
     print(f"slide {slide_no}: {old!r} -> {new!r}")
 
-edit_text(7, "raised by her strict aunt", "raised by his strict aunt")
+# no pronoun may point at the answer in an identify-the-person question
+edit_text(7, "Who was raised by her strict aunt Mimi?",
+             "Who was raised by a strict aunt called Mimi?")
+edit_text(9, "Who lived with his grandmother when he was a child?",
+             "Who was left with a grandmother as a small child?")
+edit_text(51, "Who lost his right arm?", "Who lost an arm in a battle?")
+edit_text(79, "Which person was born on the same day as his son?",
+              "Which person had a son with the same birthday?")
+edit_text(81, "Which person continued his career after losing an eye and an arm?",
+              "Which person continued working after losing an eye and an arm?")
 edit_text(41, "What did Nelson win at the Battle of the Nile?",
               "What did Nelson do at the Battle of the Nile?")
 edit_text(78, "Newton → Nelson → Elizabeth → Lennon → Diana.",

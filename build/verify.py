@@ -88,6 +88,12 @@ check(C.TIMELINE_KEY == [n for n, _ in sorted(C.TIMELINE, key=lambda x: x[1])],
 check(C.TIMELINE_KEY[0] == "Elizabeth I",
       "timeline starts with Elizabeth I (the game slide has this wrong)")
 check(len({q for q, _ in C.WHO}) == len(C.WHO), "'Who is it?' has no repeated question")
+GENDERED = re.compile(r"\b(his|her|hers|he|she|him)\b", re.I)
+leaky = [norm(q) for q, _ in C.WHO if GENDERED.search(norm(q))]
+check(not leaky, "'Who is it?' never reveals the answer's gender", " | ".join(leaky))
+leaky = [f"{d['name']} {p}" for d in C.PEOPLE for p, q, _ in d["jeopardy"]
+         if re.match(r"(who|which person)\b", norm(q), re.I) and GENDERED.search(norm(q))]
+check(not leaky, "no call-back question reveals the answer's gender", " | ".join(leaky))
 check({a for _, a in C.WHO} == {"Newton", "Lennon", "Diana"},
       "'Who is it?' uses exactly the three required people")
 counts = {p: sum(1 for _, a in C.WHO if a == p) for p in ("Newton", "Lennon", "Diana")}

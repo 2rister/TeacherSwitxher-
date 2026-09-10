@@ -92,8 +92,11 @@ def audit(path, quiet=False):
         if key in qtexts:
             problems.append(f"slide {i}: repeats the question on slide {qtexts[key]}")
         qtexts[key] = i
-        if re.search(r"\bher\b", q) and "Lennon" in " ".join(texts(i + 1)):
-            problems.append(f"slide {i}: says 'her' but the answer is John Lennon -> {q!r}")
+        # An identify-the-person question must not name the answer's gender:
+        # with three men and two women on the board, "his" halves the field.
+        if re.match(r"(who|which person)\b", q, re.I) and re.search(
+                r"\b(his|her|hers|he|she|him)\b", q, re.I):
+            problems.append(f"slide {i}: a pronoun gives the answer's gender away -> {q!r}")
 
     for i in AS:
         a = " ".join(texts(i))

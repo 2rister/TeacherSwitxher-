@@ -103,7 +103,7 @@ NEWTON = dict(
         ("Today Newton&#8217;s formulas help engineers", "build cars, bridges and rockets."),
     ],
     jeopardy=[
-        (400, "Who lived with his grandmother when he was a child?", "Isaac Newton."),
+        (400, "Who was left with a grandmother as a small child?", "Isaac Newton."),
         (600, "What did Newton create to explain how objects move?", "Three laws of motion."),
         (700, "What did Newton do at Cambridge to pay for his studies?", "He worked as a servant."),
     ],
@@ -440,13 +440,13 @@ PEOPLE = [NEWTON, LENNON, DIANA, DARWIN, NELSON]
 # "Who is it?" items are taken straight from the Jeopardy board.
 WHO = [
     ("Who was born in Liverpool in 1940?",                         "Lennon"),
-    ("Who lived with his grandmother when he was a child?",        "Newton"),
+    ("Who was left with a grandmother as a small child?",           "Newton"),
     ("Who was a quiet and shy child and liked dancing and music?", "Diana"),
     ("Who discovered the force of gravity?",                       "Newton"),
     ("Who wrote and recorded the song &#8220;Imagine&#8221;?",     "Lennon"),
     ("Who worked with children before becoming famous?",           "Diana"),
     ("Who worked as a servant at Cambridge University?",           "Newton"),
-    ("Who was born on the same day as his son?",                   "Lennon"),
+    ("Who had a son with the same birthday?",                       "Lennon"),
     ("Who became famous for helping people through charity work?", "Diana"),
     ("Who kept a telescope on the roof of the house?",             "Newton"),
 ]
