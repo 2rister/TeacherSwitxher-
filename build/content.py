@@ -277,9 +277,90 @@ DIANA = dict(
     ],
 )
 
-PEOPLE = [NEWTON, LENNON, DIANA]
 
-# ------------------------------------------------------- Sheet IV: mixed round
+# ------------------------------------------------------------ Charles Darwin
+# Darwin is the one person here who is NOT on the Jeopardy board, so his sheet
+# offers three ready items to ADD to the game instead of calling back to it.
+DARWIN = dict(
+    slug="charles-darwin", num="IV", name="Charles Darwin", dates="1809 &#8211; 1882",
+    tagline="Ask questions. Discover the truth.",
+    strap="Naturalist &#183; Geologist &#183; Author",
+    portrait="darwin.png", board_is_new=True,
+    text=[
+        "Charles Darwin (1809&#8211;1882) was a British scientist who studied nature and animals "
+        "during the Victorian era. He was born in Shrewsbury, England, and died in Kent.",
+
+        "Darwin grew up in a wealthy family. His father, a doctor, hoped Charles would follow the "
+        "same path, but Charles was far more drawn to nature than to his studies. At university he "
+        "showed little interest in his lessons, preferring instead to explore the natural world and "
+        "collect beetles and birds. Much of what he learned came not from textbooks but from his "
+        "own observations and curiosity.",
+
+        "Adventurous by nature, Darwin loved exploring rainforests and climbing mountains in search "
+        "of new plants and animals. At the age of 22, he joined a voyage around the world that "
+        "lasted five years &#8212; a journey that would go on to change the course of science.",
+
+        "Through his observations during and after the voyage, Darwin developed the theory of "
+        "evolution, proposing that all living things, including humans, share common ancestors. It "
+        "was a radical idea for its time, offering an answer to a question that had long puzzled "
+        "naturalists: how do species change over time? His theory reshaped the way people "
+        "understood the natural world.",
+
+        "Later in life, Darwin married his cousin Emma, and together they had children.",
+
+        "Today, Darwin&#8217;s theory remains a cornerstone of modern science and is taught in "
+        "schools around the world, having fundamentally changed how we understand nature.",
+    ],
+    pull="Much of what he learned came from his own observations and curiosity.",
+    tf=[
+        ("Charles Darwin was born in England.", "T"),
+        ("Darwin&#8217;s father wanted him to become a doctor too.", "T"),
+        ("Darwin was a very good student at university.", "F"),
+        ("At university Darwin collected beetles and birds.", "T"),
+        ("Darwin&#8217;s brother travelled with him on the voyage.", "NG"),
+        ("The voyage around the world lasted five years.", "T"),
+        ("Darwin was 22 years old when he joined the voyage.", "T"),
+        ("Darwin married a woman he had never met before.", "F"),
+    ],
+    bank=["ancestors", "beetles", "cousin", "doctor", "evolution", "mountains", "nature", "voyage"],
+    gaps=[
+        ("Charles Darwin studied ____________ and animals.", "nature"),
+        ("His father was a ____________ .", "doctor"),
+        ("At university Darwin collected ____________ and birds.", "beetles"),
+        ("He loved exploring rainforests and climbing ____________ .", "mountains"),
+        ("At the age of 22 he joined a ____________ around the world.", "voyage"),
+        ("Darwin developed the theory of ____________ .", "evolution"),
+        ("He proposed that all living things share common ____________ .", "ancestors"),
+        ("Later in life Darwin married his ____________ Emma.", "cousin"),
+    ],
+    qs=[
+        ("Where was Charles Darwin born?", "In Shrewsbury, England."),
+        ("What did Darwin&#8217;s father hope his son would become?",
+         "A doctor &#8211; he hoped Charles would follow the same path."),
+        ("What did Darwin collect instead of studying his lessons?", "Beetles and birds."),
+        ("How old was Darwin when he joined the voyage around the world?", "He was 22."),
+        ("What did Darwin&#8217;s theory say about all living things?",
+         "That they all, including humans, share common ancestors."),
+        ("Who did Darwin marry?", "His cousin Emma."),
+    ],
+    match=[
+        ("Darwin&#8217;s father was a doctor and hoped", "that Charles would follow the same path."),
+        ("At university Darwin was more interested in nature", "than in his lessons."),
+        ("The voyage around the world", "lasted five years."),
+        ("Darwin&#8217;s theory says that humans and animals",
+         "share common ancestors."),
+        ("Today Darwin&#8217;s theory", "is taught in schools around the world."),
+    ],
+    jeopardy=[
+        (400, "Who joined a voyage around the world at the age of 22?", "Charles Darwin."),
+        (600, "What is the name of Darwin&#8217;s famous theory?", "The theory of evolution."),
+        (800, "Who did Charles Darwin marry?", "His cousin Emma."),
+    ],
+)
+
+PEOPLE = [NEWTON, LENNON, DIANA, DARWIN]
+
+# -------------------------------------------------------- Sheet V: mixed round
 # "Who is it?" items are taken straight from the Jeopardy board.
 WHO = [
     ("Who was born in Liverpool in 1940?",                         "Lennon"),
@@ -332,7 +413,7 @@ TEACHER_NOTES = [
     ("Wild Card 600 &#8211; wrong answer on the game slide",
      "The board answers &#8220;Newton &#8594; Nelson &#8594; Elizabeth &#8594; Lennon &#8594; Diana&#8221;. "
      "By year of birth the correct order is Elizabeth I (1533) &#8594; Newton (1642) &#8594; "
-     "Nelson (1758) &#8594; Lennon (1940) &#8594; Diana (1961). Task 2 on Sheet IV uses the corrected order."),
+     "Nelson (1758) &#8594; Lennon (1940) &#8594; Diana (1961). Task 2 on Sheet V uses the corrected order."),
     ("Childhood &amp; Early Life 300 &#8211; pronoun mismatch",
      "The slide asks &#8220;Who was raised by <i>her</i> strict aunt Mimi?&#8221; but the answer is John Lennon. "
      "It should read <i>his</i>. Corrected in this pack."),
@@ -369,6 +450,16 @@ GLOSSARY = {
         ("to break up", "to stop working together"),
         ("views", "the things a person believes"),
         ("memory", "something that people remember"),
+    ],
+    "charles-darwin": [
+        ("nature", "plants, animals and everything in the natural world"),
+        ("wealthy", "having a lot of money"),
+        ("beetle", "a small insect with hard wings"),
+        ("voyage", "a long journey by ship"),
+        ("observation", "watching something carefully to learn about it"),
+        ("evolution", "the slow change of plants and animals over a very long time"),
+        ("ancestor", "someone who lived a long time before you"),
+        ("species", "a group of animals or plants of the same kind"),
     ],
     "princess-diana": [
         ("shy", "not comfortable with new people"),

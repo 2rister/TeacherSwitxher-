@@ -18,7 +18,7 @@ Item format
 """
 
 NEWTON = dict(
-    slug="newton", num="VI", name="Isaac Newton", dates="1642 – 1727",
+    slug="newton", num="VII", name="Isaac Newton", dates="1642 – 1727",
     portrait="newton-thumb.jpg",
     mc=[
         ("Isaac Newton ____ born in England in 1642.", ["is", "was", "were"], 1),
@@ -50,7 +50,7 @@ NEWTON = dict(
 )
 
 LENNON = dict(
-    slug="lennon", num="VII", name="John Lennon", dates="1940 – 1980",
+    slug="lennon", num="VIII", name="John Lennon", dates="1940 – 1980",
     portrait="lennon-thumb.jpg",
     mc=[
         ("John Lennon ____ born in Liverpool in 1940.", ["were", "was", "is"], 1),
@@ -82,7 +82,7 @@ LENNON = dict(
 )
 
 DIANA = dict(
-    slug="diana", num="VIII", name="Princess Diana", dates="1961 – 1997",
+    slug="diana", num="IX", name="Princess Diana", dates="1961 – 1997",
     portrait="diana-thumb.jpg",
     mc=[
         ("Diana ____ born on 1 July 1961.", ["were", "was", "is"], 1),
@@ -116,9 +116,9 @@ DIANA = dict(
 
 GRAMMAR_PEOPLE = [NEWTON, LENNON, DIANA]
 
-# ------------------------------------------------- Sheet IX: all three together
+# -------------------------------------------------- Sheet X: all three together
 MIXED = dict(
-    slug="mixed", num="IX", name="All Three Together", dates="Newton · Lennon · Diana",
+    slug="mixed", num="X", name="All Three Together", dates="Newton · Lennon · Diana",
     mc=[
         ("Isaac Newton ____ born in 1642, and John Lennon ____ born in 1940.",
          ["was / was", "were / was", "was / were"], 0),
@@ -178,7 +178,7 @@ IRREGULAR = [
 GRAMMAR_NOTE = (
     "These sheets do not follow the reading texts &#8211; they are free-standing Past Simple "
     "practice about the same three people, so they can be used before, after or without "
-    "Sheets I&#8211;IV. Every fact was checked against the subject&#8217;s Wikipedia article. "
+    "Sheets I&#8211;V. Every fact was checked against the subject&#8217;s Wikipedia article. "
     "Where a well-known story could not be confirmed there &#8211; Diana&#8217;s ungloved handshake "
     "with an AIDS patient, her walk through the Angolan minefield &#8211; it was left out, and only "
     "the general facts are used. Newton&#8217;s father is never mentioned: the reading text and the "

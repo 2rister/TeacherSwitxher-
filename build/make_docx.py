@@ -423,7 +423,7 @@ def grammar_key_doc():
                 f"({j}) {txt(x)}" for j, x in enumerate(a, 1))
             para(doc, f"     {i}. {val}", size=10.5, space_after=1)
 
-    para(doc, "SHEET IX  ·  TASK 4  ·  IRREGULAR VERBS", size=12, bold=True, color=NAVY,
+    para(doc, "SHEET X  ·  TASK 4  ·  IRREGULAR VERBS", size=12, bold=True, color=NAVY,
          space_before=12, space_after=4)
     para(doc, "   ".join(f"{a} \u2192 {b}" for a, b in G.IRREGULAR), size=10.5)
     para(doc, "NOTES", size=12, bold=True, color=RED, space_before=12, space_after=3)
@@ -440,12 +440,12 @@ if __name__ == "__main__":
     B.write_html()          # fixes the matching and numbers keys, exactly as the PDFs use them
     print("\nWriting editable Word versions\n")
     docs = [(f"0{i + 1}-{d['slug']}", person_doc(d)) for i, d in enumerate(C.PEOPLE)]
-    docs.append(("04-mixed-round", mixed_doc()))
-    docs.append(("05-answer-key", key_doc()))
-    docs += [(f"0{6 + i}-grammar-{d['slug']}", grammar_doc(d))
+    docs.append(("05-mixed-round", mixed_doc()))
+    docs.append(("06-answer-key", key_doc()))
+    docs += [(f"0{7 + i}-grammar-{d['slug']}", grammar_doc(d))
              for i, d in enumerate(G.GRAMMAR_PEOPLE)]
-    docs.append(("09-grammar-mixed", grammar_doc(G.MIXED, mixed=True)))
-    docs.append(("10-grammar-answer-key", grammar_key_doc()))
+    docs.append(("10-grammar-mixed", grammar_doc(G.MIXED, mixed=True)))
+    docs.append(("11-grammar-answer-key", grammar_key_doc()))
     for name, doc in docs:
         path = os.path.join(OUT, name + ".docx")
         doc.save(path)

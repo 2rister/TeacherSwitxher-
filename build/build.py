@@ -90,8 +90,12 @@ def person_sheet(d):
 <div class="tasks">
 {R.task(3, "Answer the questions", "Write full sentences.", R.q_body(d['qs']))}
 {R.task(4, "Match the two halves", "Write a, b, c, d or e.", R.match_body(d['match'], rhs), navy=True)}
-{R.task(5, "Back to the board", "From the game &#8211; texts face down!",
-        R.jeopardy_body(d['jeopardy'], title=f"{d['name']} on the Jeopardy board"))}
+{R.task(5, *(("New for the board", "Not on your board yet &#8211; add these three.")
+             if d.get("board_is_new") else
+             ("Back to the board", "From the game &#8211; texts face down!")),
+        body=R.jeopardy_body(d['jeopardy'],
+            title=(f"Three questions to add for {d['name']}" if d.get("board_is_new")
+                   else f"{d['name']} on the Jeopardy board")))}
 </div>
 {R.foot(FOOT_L, FOOT_M, f"Sheet {d['num']} &#183; p. 3")}
 </div>"""
@@ -120,7 +124,7 @@ def mixed_sheet():
         for t, ps in C.DEBATE['phrases'])
 
     p1 = f"""<div class="page">
-{R.masthead("The Mixed Round &#183; Newton &#183; Lennon &#183; Diana", "IV")}
+{R.masthead("The Mixed Round &#183; Newton &#183; Lennon &#183; Diana", "V")}
 <div class="tasks">
 {R.task(1, "Who is it?", "N = Newton &#183; L = Lennon &#183; D = Diana",
         f'<ol class="items">{who}</ol>')}
@@ -130,11 +134,11 @@ def mixed_sheet():
         f'<div class="match"><ol class="items">{nums_l}</ol>'
         f'<ol class="items rhs">{nums_r}</ol></div>')}
 </div>
-{R.foot(FOOT_L, FOOT_M, "Sheet IV &#183; p. 1")}
+{R.foot(FOOT_L, FOOT_M, "Sheet V &#183; p. 1")}
 </div>"""
 
     p2 = f"""<div class="page">
-{R.masthead("Final Round &#183; Speak &#183; Reason &#183; Persuade &#183; Respect", "IV")}
+{R.masthead("Final Round &#183; Speak &#183; Reason &#183; Persuade &#183; Respect", "V")}
 <div class="tasks">
 {R.task(4, "Final Jeopardy &#183; Speaking", "Work in pairs, then tell the class.",
         f'<p style="margin:0 0 2.6mm;font-size:11.4pt;"><b>{C.DEBATE["question"]}</b></p>'
@@ -150,7 +154,7 @@ def mixed_sheet():
               "Elizabeth I &#8594; Newton &#8594; Nelson &#8594; Lennon &#8594; Diana.")],
             title="Bonus points"))}
 </div>
-{R.foot(FOOT_L, FOOT_M, "Sheet IV &#183; p. 2")}
+{R.foot(FOOT_L, FOOT_M, "Sheet V &#183; p. 2")}
 </div>"""
     return R.head("The Mixed Round &#8211; A2") + p1 + p2 + "</body></html>"
 
@@ -224,24 +228,24 @@ def grammar_key():
     irr = " &#183; ".join(f"<b>{a}</b> &#8594; {b}" for a, b in G.IRREGULAR)
 
     p1 = f"""<div class="page">
-{R.masthead("Grammar Answer Key &#183; For the teacher", "X")}
+{R.masthead("Grammar Answer Key &#183; For the teacher", "XI")}
 <div class="key-grid">{''.join(blocks[:2])}</div>
 <div style="height:3mm"></div>
 <div class="key-grid">{''.join(blocks[2:])}</div>
-{R.foot("Grammar Key", FOOT_M, "Sheet X &#183; p. 1")}
+{R.foot("Grammar Key", FOOT_M, "Sheet XI &#183; p. 1")}
 </div>"""
     p2 = f"""<div class="page">
-{R.masthead("Grammar Key &#183; Irregular verbs &amp; notes", "X")}
+{R.masthead("Grammar Key &#183; Irregular verbs &amp; notes", "XI")}
 <h2 style="font-family:Cinzel,serif;font-size:12pt;letter-spacing:.16em;color:#1b2a4a;
-           margin:0 0 3mm;text-transform:uppercase">Sheet IX &#183; task 3</h2>
+           margin:0 0 3mm;text-transform:uppercase">Sheet X &#183; task 4</h2>
 <p style="font-size:10.4pt;line-height:1.7;margin:0 0 4mm">{irr}</p>
-<div class="note"><b>How these sheets relate to Sheets I&#8211;IV</b>{G.GRAMMAR_NOTE}</div>
+<div class="note"><b>How these sheets relate to Sheets I&#8211;V</b>{G.GRAMMAR_NOTE}</div>
 <div class="note" style="border-left-color:#1b2a4a;background:rgba(27,42,74,.055)">
 <b>Marking the negatives and questions</b>
 Both the full and the contracted form are correct: <i>did not like</i> and <i>didn&#8217;t like</i>
 are equally right, and so are <i>was not</i> and <i>wasn&#8217;t</i>. The key prints both, separated
 by a slash. In task 2 the capital letter at the start of a question is part of the answer.</div>
-{R.foot("Grammar Key", FOOT_M, "Sheet X &#183; p. 2")}
+{R.foot("Grammar Key", FOOT_M, "Sheet XI &#183; p. 2")}
 </div>"""
     return R.head("Grammar answer key") + p1 + p2 + "</body></html>"
 
@@ -279,7 +283,7 @@ def key_sheet():
     tl_num = " &#183; ".join(f"<b>{rank[n]}</b>" for n, _ in C.TIMELINE)
     nums = " &#183; ".join(f'{i} <b>{L(k)}</b>' for i, k in enumerate(C._nums_key, 1))
     blocks.append(f"""<div class="key-block">
-<h3>Sheet IV &#183; The Mixed Round</h3>
+<h3>Sheet V &#183; The Mixed Round</h3>
 <p style="margin:0 0 1.4mm;font-size:9.9pt"><span class="key-tag">1 WHO IS IT?</span> {who}</p>
 <p style="margin:0 0 1.4mm;font-size:9.9pt"><span class="key-tag">2 ORDER</span> {tl}</p>
 <p style="margin:0 0 1.4mm;font-size:9.4pt;color:#5a4a38">Numbers to write in the boxes,
@@ -293,23 +297,24 @@ No single correct answer. Accept any person if the student gives a reason
     notes = "".join(f"<div class='note'><b>{t}</b>{b}</div>" for t, b in C.TEACHER_NOTES)
 
     p1 = f"""<div class="page">
-{R.masthead("Answer Key &#183; For the teacher", "V")}
+{R.masthead("Answer Key &#183; For the teacher", "VI")}
 <div class="key-grid">{''.join(blocks[:2])}</div>
 <div style="height:3mm"></div>
 <div class="key-grid">{''.join(blocks[2:])}</div>
-{R.foot("Answer Key", FOOT_M, "Sheet V &#183; p. 1")}
+{R.foot("Answer Key", FOOT_M, "Sheet VI &#183; p. 1")}
 </div>"""
 
     p2 = f"""<div class="page">
-{R.masthead("Teacher&#8217;s Notes &#183; Checks &amp; Corrections", "V")}
+{R.masthead("Teacher&#8217;s Notes &#183; Checks &amp; Corrections", "VI")}
 <h2 style="font-family:Cinzel,serif;font-size:12pt;letter-spacing:.16em;color:#1b2a4a;
            margin:0 0 3mm;text-transform:uppercase">Before you print</h2>
 {notes}
 <div class="note" style="border-left-color:#1b2a4a;background:rgba(27,42,74,.055)">
 <b>How the pack maps onto the game</b>
-Every item in tasks 1Every item in tasks 1&#8211;5 on Sheets I&#8211;III#8211;5 on Sheets I&#8211;III, and every item on Sheet IV, is built on a fact that
-appears on the Jeopardy board, so the handouts and the game test the same knowledge. Suggested order:
-read the sheet &#8594; do the exercises &#8594; play the game with the texts face down.</div>
+Every item on Sheets I&#8211;III and V is built on a fact that appears on the Jeopardy board, so the
+handouts and the game test the same knowledge. Charles Darwin (Sheet IV) is the exception &#8211; he is
+not on your board at all, so task 5 there offers three questions you can add to it instead.
+Suggested order: read the sheet &#8594; do the exercises &#8594; play the game with the texts face down.</div>
 <div class="note" style="border-left-color:#b08d57;background:rgba(176,141,87,.09)">
 <b>Image credits &amp; licences</b>
 <span class="credits">
@@ -323,7 +328,7 @@ this pack reproduces it in duotone as a derivative work under the same licence.
 Via Wikimedia Commons.<br>
 Type: Cinzel, Playfair Display, EB Garamond &#8211; SIL Open Font License 1.1.
 </span></div>
-{R.foot("Answer Key", FOOT_M, "Sheet V &#183; p. 2")}
+{R.foot("Answer Key", FOOT_M, "Sheet VI &#183; p. 2")}
 </div>"""
     return R.head("Answer Key &#8211; A2") + p1 + p2 + "</body></html>"
 
@@ -337,12 +342,12 @@ def write_html():
     the numbers key, and the answer key reads both."""
     os.makedirs(OUT_HTML, exist_ok=True)
     SHEETS[:] = [(f"0{i+1}-{d['slug']}", person_sheet(d)) for i, d in enumerate(C.PEOPLE)]
-    SHEETS.append(("04-mixed-round", mixed_sheet()))
-    SHEETS.append(("05-answer-key", key_sheet()))
-    SHEETS.extend((f"0{6 + i}-grammar-{d['slug']}", grammar_sheet(d))
+    SHEETS.append(("05-mixed-round", mixed_sheet()))
+    SHEETS.append(("06-answer-key", key_sheet()))
+    SHEETS.extend((f"0{7 + i}-grammar-{d['slug']}", grammar_sheet(d))
                   for i, d in enumerate(G.GRAMMAR_PEOPLE))
-    SHEETS.append(("09-grammar-mixed", grammar_mixed()))
-    SHEETS.append(("10-grammar-answer-key", grammar_key()))
+    SHEETS.append(("10-grammar-mixed", grammar_mixed()))
+    SHEETS.append(("11-grammar-answer-key", grammar_key()))
     # one file with every sheet, for printing the whole pack in a single job
     body = "".join(h[h.index("<body>") + 6: h.index("</body>")] for _, h in SHEETS)
     SHEETS.insert(0, ("00-complete-pack",

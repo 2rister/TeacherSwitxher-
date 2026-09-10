@@ -98,11 +98,44 @@ print()
 
 # ------------------------------------------------------- required people only
 print("-- Requirements")
-check({d["name"] for d in C.PEOPLE} == {"Isaac Newton", "John Lennon", "Princess Diana"},
-      "pack covers Newton, Lennon and Diana")
+check({d["name"] for d in C.PEOPLE} ==
+      {"Isaac Newton", "John Lennon", "Princess Diana", "Charles Darwin"},
+      "pack covers Newton, Lennon, Diana and Darwin")
 for d in C.PEOPLE:
     check(len(d["tf"]) == 8 and len(d["gaps"]) == 8 and len(d["qs"]) == 6 and len(d["match"]) == 5,
           f"{d['name']}: full exercise set (8 T/F, 8 gaps, 6 questions, 5 matches)")
+
+# ------------------------------------------------- rendered output sanity
+# A stray "&" in a shell replacement once expanded to the whole match and left
+# "III#8211;5" in the teacher's notes, which shipped. An entity fragment with no
+# leading "&" cannot occur on purpose, so scan every rendered sheet for one.
+print("-- Rendered HTML")
+HTMLDIR = os.path.join(os.path.dirname(HERE), "materials", "html")
+orphan = re.compile(r"(?<!&)#\d{2,5};")
+dirty = []
+for f in sorted(os.listdir(HTMLDIR)):
+    if not f.endswith(".html"):
+        continue
+    body = open(os.path.join(HTMLDIR, f), encoding="utf-8").read()
+    for m in orphan.finditer(body):
+        dirty.append(f"{f}: ...{body[max(0, m.start() - 30):m.end() + 10]}...")
+check(not dirty, "no orphaned HTML entity fragments in any sheet",
+      " | ".join(dirty[:3]))
+
+# duplicated phrases are the other fingerprint of a botched replacement
+dupes = []
+for f in sorted(os.listdir(HTMLDIR)):
+    if not f.endswith(".html") or f.startswith("00-"):
+        continue
+    text = norm(open(os.path.join(HTMLDIR, f), encoding="utf-8").read())
+    for m in re.finditer(r"\b(\w+(?: \w+){4,7})\b \1\b", text):
+        dupes.append(f"{f}: {m.group(1)[:50]}")
+check(not dupes, "no phrase repeated back to back in any sheet", " | ".join(dupes[:3]))
+
+nums = [d["num"] for d in C.PEOPLE] + ["V", "VI"] + [d["num"] for d in G.GRAMMAR_PEOPLE] + ["X", "XI"]
+ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"]
+check(nums == ROMAN, "sheet numbers run I to XI with no gap or repeat", str(nums))
+print()
 
 # ------------------------------------------------- Past Simple grammar sheets
 print("-- Past Simple grammar")
@@ -179,9 +212,9 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
               f"{d['name']}: Word matching column is in the same order as the PDF")
 
     # the grammar options are not shuffled, but a Word rebuild could still drift
-    gram_files = [(os.path.join(DOCX, f"0{6 + i}-grammar-{d['slug']}.docx"), d)
+    gram_files = [(os.path.join(DOCX, f"0{7 + i}-grammar-{d['slug']}.docx"), d)
                   for i, d in enumerate(G.GRAMMAR_PEOPLE)]
-    gram_files.append((os.path.join(DOCX, "09-grammar-mixed.docx"), G.MIXED))
+    gram_files.append((os.path.join(DOCX, "10-grammar-mixed.docx"), G.MIXED))
     for path, d in gram_files:
         if not os.path.exists(path):
             check(False, f"{d['name']}: Word grammar sheet exists"); continue
@@ -197,7 +230,7 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
         check(not bad, f"{d['name']}: Word test options match the PDF, in order",
               f"items {bad}")
 
-    f = os.path.join(DOCX, "04-mixed-round.docx")
+    f = os.path.join(DOCX, "05-mixed-round.docx")
     if os.path.exists(f):
         want = [None] * len(C.NUMBERS)
         for j, slot in enumerate(C._nums_key):
