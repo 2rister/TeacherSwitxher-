@@ -107,6 +107,30 @@ for d in C.PEOPLE:
     check(len(d["tf"]) == 8 and len(d["gaps"]) == 8 and len(d["qs"]) == 6 and len(d["match"]) == 5,
           f"{d['name']}: full exercise set (8 T/F, 8 gaps, 6 questions, 5 matches)")
 
+# ------------------------------------------------- the Jeopardy deck itself
+DECK = os.path.join(os.path.dirname(HERE), "materials", "jeopardy",
+                    "Jeopardy_Interesting_People_A2_fixed.pptx")
+if os.path.exists(DECK):
+    print("-- Jeopardy deck")
+    import audit_jeopardy
+    deck_problems = audit_jeopardy.audit(DECK, quiet=True)
+    check(not deck_problems, "repaired deck: navigation and content are clean",
+          " | ".join(deck_problems[:3]))
+
+    # the deck and the handouts must not disagree about the birth order
+    from pptx import Presentation
+    deck_text = " ".join(sh.text_frame.text for s_ in Presentation(DECK).slides
+                         for sh in s_.shapes if sh.has_text_frame)
+    order = re.search(r"(Elizabeth[^.]*?Diana)", deck_text)
+    # the handouts name people in full, the deck by the name it displays;
+    # match on the surname (or "Elizabeth" for the regnal name)
+    want = [[w for w in n.split() if len(w) > 2][-1] for n in C.TIMELINE_KEY]
+    seen = [w for w in re.findall(r"[A-Z][a-z]+", order.group(1))
+            if w in want] if order else []
+    check(seen == want, "deck's birth order matches the timeline key on the handouts",
+          f"deck says {seen}, handouts say {want}")
+    print()
+
 # ------------------------------------------------- rendered output sanity
 # A stray "&" in a shell replacement once expanded to the whole match and left
 # "III#8211;5" in the teacher's notes, which shipped. An entity fragment with no

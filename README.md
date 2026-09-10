@@ -5,6 +5,31 @@
 Каждое задание построено на факте, который есть на игровом поле Jeopardy, — так
 раздатка и игра проверяют одно и то же.
 
+## Игра Jeopardy (починена)
+
+`materials/jeopardy/Jeopardy_Interesting_People_A2_fixed.pptx` — исправленная колода.
+Рядом лежит исходная (`..._original.pptx`), чтобы правку можно было повторить:
+`python3 build/fix_jeopardy.py`, проверить — `python3 build/audit_jeopardy.py`.
+
+**Что было сломано:**
+
+1. **Навигация — 38 из 40 плиток открывали чужой вопрос.** Ссылки на доске
+   расставлены по строкам (слева направо), а слайды с вопросами идут по столбцам
+   (сначала все Childhood, потом все Career…). «Career 100» открывал
+   «Childhood & Early Life 200». Совпадали случайно только первая и последняя плитки.
+2. **Childhood 300** — «Who was raised by **her** strict aunt Mimi?» при ответе
+   «John Lennon». Должно быть *his*.
+3. **Wild Card 600** — порядок по годам рождения был неверным
+   (Newton → Nelson → Elizabeth → …). Правильно: **Elizabeth I (1533) → Newton (1642)
+   → Nelson (1758) → Lennon (1940) → Diana (1961)**.
+4. **Achievements 400** — вопрос «What did Nelson **win**…» не соответствовал ответу
+   «He **defeated** a large French fleet». Заменено на *do*.
+5. **Клик мимо кнопки перелистывал слайд** (настроек показа в файле не было, работал
+   стандарт PowerPoint). На доске это уводило в «Childhood 100». Теперь игровые слайды
+   листаются только кнопками; клавиатура работает везде, титул и заметки не тронуты.
+
+Кнопки «SHOW ANSWER» и «← BACK TO BOARD» были исправны на всех 82 слайдах.
+
 ## Что печатать
 
 Три версии одного и того же комплекта — берите ту, что нужна сейчас.
@@ -107,7 +132,7 @@ board»**: три готовых вопроса, которые можно до�
 
 ```bash
 pip install playwright numpy Pillow python-docx
-python3 build/verify.py     # 93 проверки содержания
+python3 build/verify.py     # 123 проверки содержания (включая аудит колоды)
 python3 build/make_paper.py # фон-подложка (нужен один раз, файл уже в репозитории)
 python3 build/build.py      # HTML + PDF, цветной и ч/б, с контролем переполнения
 python3 build/make_docx.py  # редактируемые версии для Word
