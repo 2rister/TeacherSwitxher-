@@ -106,7 +106,63 @@ def audit(path, quiet=False):
             if order[:5] != correct:
                 problems.append(f"slide {i}: birth order is {' -> '.join(order[:5])}, "
                                 f"correct is {' -> '.join(correct)}")
+    problems += xml_link_audit(path)
     return problems
+
+
+def xml_link_audit(path):
+    """python-pptx's click_action only sees the shape-level link. A tile carries a
+    second one on its text run, and PowerPoint follows whichever the click lands
+    on, so both have to be checked - at the XML level, where they both live."""
+    import zipfile
+    from lxml import etree
+    NS = {"a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+          "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+          "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships"}
+    RID = f"{{{NS['r']}}}id"
+    Z = zipfile.ZipFile(path)
+    prels = {r.get("Id"): r.get("Target").split("/")[-1]
+             for r in etree.fromstring(Z.read("ppt/_rels/presentation.xml.rels"))}
+    order = [prels[e.get(RID)] for e in
+             etree.fromstring(Z.read("ppt/presentation.xml")).iter(f"{{{NS['p']}}}sldId")]
+    at = {f: i + 1 for i, f in enumerate(order)}
+    out, seen = [], {}
+    for n, f in enumerate(order, 1):
+        rels = {r.get("Id"): r.get("Target") for r in
+                etree.fromstring(Z.read(f"ppt/slides/_rels/{f}.rels"))}
+        tree = etree.fromstring(Z.read(f"ppt/slides/{f}"))
+        for sp in tree.iter(f"{{{NS['p']}}}sp"):
+            txt = ("".join(x.text or "" for x in sp.iter(f"{{{NS['a']}}}t"))).strip()
+            levels = {"shape": sp.find(f".//{{{NS['p']}}}nvSpPr"),
+                      "text": sp.find(f".//{{{NS['p']}}}txBody")}
+            dests = {}
+            for lvl, root in levels.items():
+                if root is None:
+                    continue
+                for hl in root.iter(f"{{{NS['a']}}}hlinkClick"):
+                    rid = hl.get(RID)
+                    if not rid:
+                        out.append(f"slide {n} [{lvl}] '{txt[:24]}': link with no r:id"); continue
+                    tgt = rels.get(rid)
+                    if tgt is None:
+                        out.append(f"slide {n} [{lvl}] '{txt[:24]}': r:id {rid} missing from rels"); continue
+                    d = at.get(tgt.split("/")[-1])
+                    if d is None:
+                        out.append(f"slide {n} [{lvl}] '{txt[:24]}': target {tgt} is not a slide"); continue
+                    if "hlinksldjump" not in (hl.get("action") or ""):
+                        out.append(f"slide {n} [{lvl}] '{txt[:24]}': not a slide-jump action")
+                    dests.setdefault(lvl, set()).add(d)
+            if len(dests) == 2 and dests["shape"] != dests["text"]:
+                out.append(f"slide {n} '{txt[:24]}': shape link -> {dests['shape']}, "
+                           f"text link -> {dests['text']}")
+            # a filled shape is clickable all over; a no-fill one only on its glyphs
+            if dests and not txt.isdigit():
+                spPr = sp.find(f".//{{{NS['p']}}}spPr")
+                if spPr is not None and spPr.find(f"{{{NS['a']}}}noFill") is not None \
+                        and "shape" in dests and "text" not in dests:
+                    out.append(f"slide {n} '{txt[:24]}': button has no fill, so only the "
+                               f"letters would be clickable")
+    return out
 
 DEFAULT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                        "materials", "jeopardy", "Jeopardy_Interesting_People_A2_fixed.pptx")
