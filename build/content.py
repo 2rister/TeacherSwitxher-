@@ -434,7 +434,83 @@ NELSON = dict(
     ],
 )
 
-PEOPLE = [NEWTON, LENNON, DIANA, DARWIN, NELSON]
+
+# ----------------------------------------------------------- Elizabeth I
+# Two corrections to the teacher's text, both checked against the record:
+# she died on 24 March 1603 (not 14 March) and reigned 44 years (not 45).
+ELIZABETH = dict(
+    slug="elizabeth-i", name="Elizabeth I", dates="1533 &#8211; 1603",
+    tagline="She kept the power herself",
+    strap="Queen of England &#183; The Virgin Queen",
+    portrait="elizabeth.jpg",
+    text=[
+        "Elizabeth was born in 1533. Her parents were King Henry VIII and Anne Boleyn. Her father "
+        "was not happy because he wanted a son. When Elizabeth was two years old, her mother was "
+        "killed. The young girl went to live at Hatfield Palace, where she got a very good "
+        "education. By the age of thirteen, she spoke several languages and was a good writer.",
+
+        "She became queen in 1558. Many men from different countries wanted to marry her, but she "
+        "said no to all of them. She never married because she wanted to keep all the power "
+        "herself. During her reign, she had a big conflict with Spain. Spain was a big, rich, and "
+        "Catholic country, but England was smaller and Protestant. In the 1580s, the two countries "
+        "fought at sea. English sailors were fast and clever, so Spain never won.",
+
+        "The Queen had time for other things and loved the theatre very much. Her favourite writer "
+        "was William Shakespeare, and his actors often performed plays at her palace. As a young "
+        "woman, Elizabeth was ill with smallpox, and the illness left marks on her face. To hide "
+        "them, she covered her face with thick white make-up and wore a big orange wig.",
+
+        "Elizabeth died on 24 March 1603. She was queen for 44 years. Nobody knows exactly why she "
+        "died, but the white make-up was a poison, and it perhaps killed her slowly. Today, she is "
+        "buried in Westminster Abbey.",
+    ],
+    pull="She said no to all of them, and kept the power herself.",
+    tf=[
+        ("Elizabeth&#8217;s father wanted a daughter.", "F"),
+        ("Elizabeth&#8217;s mother was killed when Elizabeth was two years old.", "T"),
+        ("Elizabeth got a very good education at Hatfield Palace.", "T"),
+        ("Elizabeth spoke only one language.", "F"),
+        ("Elizabeth&#8217;s teachers came from other countries.", "NG"),
+        ("Elizabeth married a king from another country.", "F"),
+        ("Spain never won the war at sea.", "T"),
+        ("Elizabeth was queen for more than forty years.", "T"),
+    ],
+    bank=["Abbey", "education", "languages", "make-up", "power", "Spain", "theatre", "wig"],
+    gaps=[
+        ("At Hatfield Palace Elizabeth got a very good ____________ .", "education"),
+        ("By the age of thirteen she spoke several ____________ .", "languages"),
+        ("She wanted to keep all the ____________ herself.", "power"),
+        ("During her reign she had a big conflict with ____________ .", "Spain"),
+        ("The Queen loved the ____________ very much.", "theatre"),
+        ("She covered her face with thick white ____________ .", "make-up"),
+        ("She also wore a big orange ____________ .", "wig"),
+        ("Today she is buried in Westminster ____________ .", "Abbey"),
+    ],
+    qs=[
+        ("Who were Elizabeth&#8217;s parents?", "King Henry VIII and Anne Boleyn."),
+        ("Why was her father not happy?", "Because he wanted a son."),
+        ("Why did Elizabeth never marry?",
+         "She wanted to keep all the power herself."),
+        ("Why did Spain never win at sea?", "Because the English sailors were fast and clever."),
+        ("Why did Elizabeth wear thick white make-up?",
+         "To hide the marks that smallpox left on her face."),
+        ("How long was Elizabeth queen?", "For 44 years."),
+    ],
+    match=[
+        ("Elizabeth&#8217;s father was not happy", "because he wanted a son."),
+        ("At Hatfield Palace Elizabeth", "got a very good education."),
+        ("Many men wanted to marry her,", "but she said no to all of them."),
+        ("English sailors were fast and clever,", "so Spain never won."),
+        ("Smallpox left marks on her face,", "so she covered it with white make-up."),
+    ],
+    jeopardy=[
+        (100, "Which person was a queen?", "Elizabeth I."),
+        (200, "Who wore a big orange wig?", "Queen Elizabeth I."),
+        (600, "What did Queen Elizabeth love very much?", "The theatre."),
+    ],
+)
+
+PEOPLE = [NEWTON, LENNON, DIANA, DARWIN, NELSON, ELIZABETH]
 
 # -------------------------------------------------------- Sheet V: mixed round
 # "Who is it?" items are taken straight from the Jeopardy board.
@@ -526,6 +602,16 @@ GLOSSARY = {
         ("to break up", "to stop working together"),
         ("views", "the things a person believes"),
         ("memory", "something that people remember"),
+    ],
+    "elizabeth-i": [
+        ("education", "learning at school or with teachers"),
+        ("power", "being able to decide and to give orders"),
+        ("reign", "the years when a king or a queen rules"),
+        ("conflict", "a serious quarrel or fight between two sides"),
+        ("sailor", "a person who works on a ship"),
+        ("smallpox", "a dangerous illness that leaves marks on the skin"),
+        ("make-up", "colour that people put on the face"),
+        ("wig", "false hair that a person wears on the head"),
     ],
     "horatio-nelson": [
         ("navy", "the ships and people that protect a country at sea"),

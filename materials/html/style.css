@@ -298,3 +298,158 @@ ol.brackets .cue { font-style: italic; color: var(--red-deep); }
 
 ol.wordorder > li { margin-bottom: 1.4mm; }
 .scrambled { font-style: italic; color: var(--ink-soft); }
+
+/* ============================================================================
+   Monday lesson kit — plan, listening, great-person, presentation, awards
+   ========================================================================== */
+.kit-head { border-bottom: 1.6pt solid var(--navy); padding-bottom: 2.2mm; margin-bottom: 3.4mm; }
+.kit-head h1 { font-family: "Cinzel", serif; font-weight: 900; font-size: 20pt; line-height: 1.06;
+               color: var(--navy); margin: 0; letter-spacing: .01em; }
+.kit-head h1 .r { color: var(--red); }
+.kit-head .sub { font-family: "Cinzel", serif; font-weight: 700; font-size: 8.6pt;
+                 letter-spacing: .2em; color: var(--red-deep); margin-top: 1.4mm;
+                 text-transform: uppercase; }
+
+h3.kit-h { font-family: "Cinzel", serif; font-weight: 900; font-size: 10pt; letter-spacing: .18em;
+           color: var(--navy); text-transform: uppercase; margin: 0 0 2mm;
+           border-bottom: .8pt solid var(--rule); padding-bottom: 1.2mm; }
+h3.kit-h.sp { margin-top: 4mm; }
+
+table.tt { width: 100%; border-collapse: collapse; font-size: 10.2pt; margin-bottom: 1mm; }
+table.tt td { border-bottom: .8pt dotted var(--ink-soft); padding: 1.5mm 2mm 1.5mm 0;
+              vertical-align: top; }
+table.tt td.clk { font-family: "Cinzel", serif; font-weight: 700; color: var(--red-deep);
+                  white-space: nowrap; width: 30mm; }
+table.tt td.len { text-align: right; color: var(--ink-soft); white-space: nowrap; width: 16mm;
+                  font-size: 9.2pt; }
+
+table.stage { width: 100%; border-collapse: collapse; font-size: 9.4pt; }
+table.stage td { border-bottom: .8pt dotted var(--ink-soft); padding: 1.4mm 2mm 1.4mm 0;
+                 vertical-align: top; line-height: 1.45; }
+table.stage td.clk { font-family: "Cinzel", serif; font-weight: 700; font-size: 9.4pt;
+                     color: var(--red-deep); white-space: nowrap; width: 17mm; }
+table.stage td.min { color: var(--ink-soft); font-size: 8.8pt; white-space: nowrap; width: 12mm; }
+table.stage td.ix  { width: 21mm; text-align: right; }
+table.stage b.st { font-family: "Cinzel", serif; letter-spacing: .05em; color: var(--navy);
+                   font-size: 10pt; }
+.tag { display: inline-block; font-family: "Cinzel", serif; font-weight: 700; font-size: 7.4pt;
+       letter-spacing: .12em; color: #f6ecd6; background: var(--navy); padding: .7mm 1.8mm;
+       white-space: nowrap; }
+
+ul.kit { margin: 0; padding-left: 5.5mm; font-size: 10.2pt; line-height: 1.55; }
+ul.kit li { margin-bottom: 1.2mm; }
+
+.script-meta { font-size: 9.2pt; color: var(--ink-soft); font-style: italic; margin: 0 0 3mm; }
+.script p { font-size: 11.6pt; line-height: 1.68; margin: 0 0 3.2mm; }
+.script p .pn { font-family: "Cinzel", serif; font-weight: 700; font-size: 8.4pt; color: var(--red);
+                margin-right: 2.2mm; vertical-align: 2pt; }
+.script .pause { color: var(--red); font-weight: 700; }
+
+.tickrow { display: flex; align-items: baseline; gap: 2.4mm; }
+.tickbox { display: inline-block; width: 4mm; height: 4mm; border: 1pt solid var(--ink);
+           background: rgba(255,250,236,.7); flex: 0 0 auto; }
+ol.items li .tickbox { margin-right: 1mm; }
+
+ol.crit { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 6mm; font-size: 10.2pt; }
+ol.crit li { break-inside: avoid; margin-bottom: 1.8mm; display: flex; gap: 2.2mm;
+             align-items: baseline; line-height: 1.4; }
+
+table.evid { width: 100%; border-collapse: collapse; font-size: 9.6pt; }
+table.evid th { font-family: "Cinzel", serif; font-weight: 700; font-size: 8.2pt;
+                letter-spacing: .12em; color: #f6ecd6; background: var(--navy);
+                padding: 1.4mm 2mm; text-align: left; text-transform: uppercase; }
+table.evid td { border: .8pt solid var(--rule); height: 13mm; padding: 1.2mm 2mm;
+                vertical-align: top; }
+table.evid td.num { width: 8mm; text-align: center; font-family: "Cinzel", serif;
+                    color: var(--red-deep); }
+
+ol.gtest { margin: 0; padding-left: 6mm; font-size: 10pt; }
+ol.gtest li { margin-bottom: 3mm; line-height: 1.5; }
+ol.gtest .so { display: block; font-style: italic; color: var(--ink-soft); font-size: 9.4pt;
+               margin-top: .8mm; }
+.rate { float: right; margin-left: 3mm; font-family: "Cinzel", serif; font-size: 8.2pt;
+        letter-spacing: .1em; color: var(--ink-soft); white-space: nowrap; }
+.rate span { display: inline-block; width: 4.4mm; height: 4.4mm; border: 1pt solid var(--ink);
+             margin-left: 1mm; vertical-align: -1mm; background: rgba(255,250,236,.7); }
+
+table.roles { width: 100%; border-collapse: collapse; font-size: 9.8pt; }
+table.roles td { border-bottom: .8pt solid var(--rule); padding: 2mm 2mm 2mm 0;
+                 vertical-align: top; line-height: 1.45; }
+table.roles td.no { width: 7mm; font-family: "Cinzel", serif; font-weight: 900; font-size: 11pt;
+                    color: var(--red); }
+table.roles td.rn { width: 34mm; font-family: "Cinzel", serif; font-weight: 700; color: var(--navy);
+                    letter-spacing: .04em; }
+table.roles td.tm { width: 26mm; font-size: 9pt; color: var(--red-deep); white-space: nowrap; }
+table.roles td.nm { width: 34mm; border-bottom: .8pt solid var(--rule); }
+table.roles td.nm i { font-size: 8pt; color: var(--ink-soft); }
+
+.frames { columns: 2; column-gap: 6mm; }
+.frame-box { break-inside: avoid; margin-bottom: 3mm; }
+.frame-box h4 { font-family: "Cinzel", serif; font-weight: 700; font-size: 8.6pt;
+                letter-spacing: .14em; color: var(--red-deep); text-transform: uppercase;
+                margin: 0 0 1.2mm; }
+.frame-box ul { margin: 0; padding-left: 4mm; font-size: 9.6pt; line-height: 1.46; }
+.frame-box li { margin-bottom: 1mm; }
+
+ol.check { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 6mm; font-size: 9.8pt; }
+ol.check li { break-inside: avoid; margin-bottom: 1.6mm; display: flex; gap: 2.2mm;
+              align-items: baseline; line-height: 1.4; }
+
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.fbcard { border: .8pt dashed var(--ink-soft); padding: 3.4mm; }
+.fbcard h4 { font-family: "Cinzel", serif; font-weight: 900; font-size: 10pt; letter-spacing: .12em;
+             color: var(--navy); margin: 0 0 1mm; text-transform: uppercase; }
+.fbcard .team { font-size: 8.4pt; color: var(--ink-soft); margin-bottom: 2.4mm; }
+.fbcard .team u { display: inline-block; min-width: 30mm; }
+.fbcard .sc { display: flex; justify-content: space-between; align-items: baseline;
+              font-size: 8.8pt; margin-bottom: 1.4mm; gap: 2mm; }
+.fbcard .sc .dots span { display: inline-block; width: 3.4mm; height: 3.4mm;
+                         border: .8pt solid var(--ink); margin-left: 1mm;
+                         background: rgba(255,250,236,.7); }
+.fbcard .open { font-size: 8.6pt; margin-top: 2.4mm; }
+.fbcard .open b { display: block; margin-bottom: .6mm; font-weight: 600; }
+.fbcard .rule { display: block; border-bottom: .7pt solid var(--ink-soft); height: 4.1mm; }
+
+.slips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin-top: 3mm; }
+.slip { border: 1pt solid var(--red); padding: 3mm; text-align: center; }
+.slip h5 { font-family: "Cinzel", serif; font-weight: 900; font-size: 9pt; letter-spacing: .16em;
+           color: var(--red); margin: 0 0 1mm; }
+.slip p { font-size: 8pt; color: var(--ink-soft); margin: 0 0 3mm; line-height: 1.35; }
+.slip .rule { display: block; border-bottom: .8pt solid var(--ink); height: 5mm; }
+
+.cert { border: 2.4pt solid var(--navy); padding: 7mm 8mm; text-align: center;
+        height: 122mm; box-sizing: border-box; display: flex; flex-direction: column;
+        justify-content: center; position: relative; }
+.cert + .cert { margin-top: 6mm; }
+.cert::after { content: ""; position: absolute; inset: 2.2mm; border: .8pt solid var(--gold);
+               pointer-events: none; }
+.cert .flag { width: 15mm; height: auto; margin: 0 auto 3mm; }
+.cert h2 { font-family: "Cinzel", serif; font-weight: 900; font-size: 17pt; letter-spacing: .12em;
+           color: var(--red); margin: 0 0 2mm; text-transform: uppercase; line-height: 1.1; }
+.cert .why { font-size: 10pt; font-style: italic; color: var(--ink-soft); margin: 0 0 6mm; }
+.cert .awarded { font-family: "Cinzel", serif; font-size: 8.4pt; letter-spacing: .2em;
+                 color: var(--navy); text-transform: uppercase; margin-bottom: 1mm; }
+.cert .name { border-bottom: 1.2pt solid var(--ink); height: 11mm; margin: 0 6mm 5mm; }
+.cert .grp { font-family: "Cinzel", serif; font-size: 9pt; letter-spacing: .1em;
+             color: var(--red-deep); margin-bottom: 5mm; }
+.cert .sig { display: flex; justify-content: space-between; gap: 8mm; font-size: 7.6pt;
+             color: var(--ink-soft); }
+.cert .sig div { flex: 1; border-top: .8pt solid var(--ink-soft); padding-top: 1mm; }
+.cert .foot-line { font-size: 7.6pt; color: var(--ink-soft); margin-top: 4mm; }
+
+.tasks.compact .answer-rule, .tasks.compact .answer-rule + .answer-rule { margin-top: 5mm; }
+
+ol.items.two { columns: 2; column-gap: 7mm; }
+ol.items.two > li { break-inside: avoid; }
+
+.tasks.roomy table.evid td { height: 19mm; }
+
+.fbcard .team .ln { display: inline-block; min-width: 24mm; border-bottom: .7pt solid var(--ink-soft);
+                    margin: 0 2mm 0 1mm; }
+
+.cutline { position: relative; text-align: center; margin: 5mm 0 0; height: 5mm; }
+.cutline::before { content: ""; position: absolute; left: 0; right: 0; top: 2.4mm;
+                   border-top: .8pt dashed var(--ink-soft); }
+.cutline span { position: relative; background: var(--paper); padding: 0 3mm; font-size: 7.4pt;
+                letter-spacing: .18em; color: var(--ink-soft); text-transform: uppercase; }
+.cert + .cutline + .cert, .cutline + .cert { margin-top: 0; }

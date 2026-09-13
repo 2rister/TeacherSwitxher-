@@ -52,3 +52,11 @@ body { background: #9a9a9a; }
 .hero-tagline { border-left-color: #000; }
 .pullquote { border-color: #000; }
 .masthead-rule { background: #000; height: 1pt; }
+
+/* ---------------------------------------------------------- Monday lesson kit */
+.tag { background: #000; color: #fff; }
+table.evid th { background: #000; color: #fff; }
+.tickbox, .rate span, .fbcard .sc .dots span { background: #fff; border-color: #000; }
+.cert { border-color: #000; }
+.cert::after { border-color: #6a6a6a; }
+.slip { border-color: #000; }

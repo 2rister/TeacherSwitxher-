@@ -25,6 +25,7 @@ sys.path.insert(0, HERE)
 
 import content as C
 import grammar as G
+import monday as M
 import build as B
 
 RED = RGBColor(0x9D, 0x22, 0x26)
@@ -442,6 +443,362 @@ def grammar_key_doc():
     return doc
 
 
+
+# ====================================================== Monday 14.09 lesson kit
+def kit_title(doc, title, sub):
+    para(doc, "MONDAY 14 SEPTEMBER 2026  ·  ELIZABETH I  ·  WHAT MAKES A GREAT PERSON?",
+         size=9, bold=True, color=GREY, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=8)
+    para(doc, title.upper(), size=20, bold=True, color=NAVY, space_after=2)
+    para(doc, sub.upper(), size=9.5, bold=True, color=RED, space_after=10)
+
+
+def section_title(doc, t):
+    para(doc, t.upper(), size=12, bold=True, color=NAVY, space_before=12, space_after=4)
+
+
+def note_box(doc, title, body):
+    t = grid(doc, 1, 1)
+    shade(t.cell(0, 0), "F3F1EA")
+    c = t.cell(0, 0)
+    cell_text(c, txt(title), size=10.5, bold=True, color=RED)
+    q = c.add_paragraph()
+    q.paragraph_format.space_after = Pt(3)
+    q.add_run(txt(body)).font.size = Pt(10)
+
+
+def stage_grid(doc, rows):
+    t = grid(doc, len(rows), 4, widths=[2.0, 1.3, 11.4, 2.1])
+    for i, (clock, mins, what, how, ix) in enumerate(rows):
+        cell_text(t.cell(i, 0), clock, size=10, bold=True, color=RED)
+        cell_text(t.cell(i, 1), f"{mins}'", size=9, color=GREY)
+        c = t.cell(i, 2)
+        cell_text(c, txt(what), size=10.5, bold=True, color=NAVY)
+        q = c.add_paragraph()
+        q.paragraph_format.space_after = Pt(2)
+        q.add_run(txt(B.subst(how))).font.size = Pt(9.5)
+        cell_text(t.cell(i, 3), ix.replace("&#8594;", "->"), size=8, bold=True,
+                  align=WD_ALIGN_PARAGRAPH.CENTER)
+
+
+def monday_plan_doc():
+    doc = new_doc()
+    kit_title(doc, "Lesson plan", "Monday 14.09.2026 · two and a half sessions · level A2")
+
+    section_title(doc, "The day")
+    t = grid(doc, len(M.TIMETABLE), 3, widths=[4.2, 10.4, 2.2])
+    for i, (a, b, c) in enumerate(M.TIMETABLE):
+        cell_text(t.cell(i, 0), txt(a), bold=True, color=RED)
+        cell_text(t.cell(i, 1), txt(b))
+        cell_text(t.cell(i, 2), txt(c), size=9, color=GREY,
+                  align=WD_ALIGN_PARAGRAPH.RIGHT)
+
+    section_title(doc, "By the end of the day students can")
+    for a in M.AIMS:
+        p = doc.add_paragraph(style="List Bullet")
+        p.paragraph_format.space_after = Pt(2)
+        p.add_run(txt(a)).font.size = Pt(10.5)
+
+    section_title(doc, "On the table before you start")
+    t = grid(doc, len(M.MATERIALS), 3, widths=[4.6, 10.0, 2.2])
+    for i, (a, b, c) in enumerate(M.MATERIALS):
+        cell_text(t.cell(i, 0), txt(B.subst(a)), bold=True, color=NAVY, size=10)
+        cell_text(t.cell(i, 1), txt(B.subst(b)), size=10)
+        cell_text(t.cell(i, 2), txt(c), size=9, color=GREY,
+                  align=WD_ALIGN_PARAGRAPH.RIGHT)
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    section_title(doc, "Session 1 · 11.00 – 11.45 · revision and Past Simple")
+    stage_grid(doc, M.STAGE1)
+    section_title(doc, "Session 2 · 12.00 – 13.35 · preparing the presentation")
+    stage_grid(doc, M.STAGE2)
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    section_title(doc, "Session 3 · 14.05 – 15.40 · plenary, presentations, awards")
+    stage_grid(doc, M.STAGE3)
+    section_title(doc, "Notes for the teacher")
+    for t_, b_ in M.PLAN_NOTES:
+        note_box(doc, t_, b_)
+    return doc
+
+
+def monday_listening_doc():
+    doc = new_doc()
+    kit_title(doc, "The Queen Who Said No",
+              "Listening · A2 · you will hear the talk twice")
+
+    rhs = [M.L_WORDS[M._lwords_key.index(i)][1] for i in range(len(M.L_WORDS))]
+    task_head(doc, 1, "Before you listen", "Match the word to its meaning. Write a–h.")
+    t = grid(doc, len(M.L_WORDS), 4, widths=[1.0, 5.2, 1.0, 9.6])
+    for i, ((w, _), r) in enumerate(zip(M.L_WORDS, rhs)):
+        cell_text(t.cell(i, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i, 1), txt(w), bold=True)
+        cell_text(t.cell(i, 2), f"{L(i)})", align=WD_ALIGN_PARAGRAPH.CENTER, color=RED)
+        cell_text(t.cell(i, 3), txt(r))
+
+    task_head(doc, 2, "First listening", "Tick the FIVE things the talk speaks about.")
+    t = grid(doc, (len(M.L_TICK) + 1) // 2, 4, widths=[1.2, 7.2, 1.2, 7.2])
+    for i, (s_, _) in enumerate(M.L_TICK):
+        r, c = i % ((len(M.L_TICK) + 1) // 2), (i // ((len(M.L_TICK) + 1) // 2)) * 2
+        cell_text(t.cell(r, c), "[  ]", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(r, c + 1), txt(s_))
+
+    task_head(doc, 3, "Second listening", "Circle T, F or NG.")
+    t = grid(doc, len(M.L_TF), 3, widths=[1.0, 13.2, 2.6])
+    for i, (s_, _) in enumerate(M.L_TF):
+        cell_text(t.cell(i, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i, 1), txt(s_))
+        cell_text(t.cell(i, 2), "T   F   NG", bold=True, align=WD_ALIGN_PARAGRAPH.CENTER)
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    nrhs = [M.L_NUMBERS[M._lnums_key.index(i)][1] for i in range(len(M.L_NUMBERS))]
+    task_head(doc, 4, "The numbers", "Write a–g next to each number.")
+    t = grid(doc, len(M.L_NUMBERS), 4, widths=[1.0, 4.0, 1.0, 10.8])
+    for i, ((n_, _), r) in enumerate(zip(M.L_NUMBERS, nrhs)):
+        cell_text(t.cell(i, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i, 1), txt(n_), bold=True)
+        cell_text(t.cell(i, 2), f"{L(i)})", align=WD_ALIGN_PARAGRAPH.CENTER, color=RED)
+        cell_text(t.cell(i, 3), txt(r))
+
+    task_head(doc, 5, "After you listen", "Talk in your team, then write.")
+    for i, q in enumerate(M.L_AFTER, 1):
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(2)
+        r = p.add_run(f"{i}.  ")
+        r.bold = True
+        r.font.color.rgb = RED
+        p.add_run(txt(q)).font.size = Pt(10.5)
+        for _ in range(2):
+            para(doc, "_" * 92, size=10.5, color=GREY, space_after=3)
+    return doc
+
+
+def monday_script_doc():
+    doc = new_doc()
+    kit_title(doc, "Audio script", "Read aloud by the teacher · for the teacher only")
+    para(doc, txt(M.SCRIPT_META), size=9.5, italic=True, color=GREY, space_after=8)
+    for i, (t_, pause) in enumerate(M.SCRIPT, 1):
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(7)
+        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        n = p.add_run(f"{i}  ")
+        n.bold = True
+        n.font.size = Pt(9)
+        n.font.color.rgb = RED
+        p.add_run(txt(t_)).font.size = Pt(12)
+        if pause:
+            r = p.add_run("  ||")
+            r.bold = True
+            r.font.color.rgb = RED
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    section_title(doc, "Listening sheet · answer key")
+    rows = [
+        ("1  Before you listen",
+         " · ".join(f"{i} {L(k)}" for i, k in enumerate(M._lwords_key, 1))),
+        ("2  First listening",
+         " · ".join(f"{i} {'tick' if t_ else '–'}"
+                    for i, (_, t_) in enumerate(M.L_TICK, 1))),
+        ("3  Second listening",
+         " · ".join(f"{i} {a}" for i, (_, a) in enumerate(M.L_TF, 1))),
+        ("4  The numbers",
+         " · ".join(f"{i} {L(k)}" for i, k in enumerate(M._lnums_key, 1))),
+        ("5  After you listen", "Open answers."),
+    ]
+    t = grid(doc, len(rows), 2, widths=[4.6, 12.2])
+    for i, (a, b) in enumerate(rows):
+        cell_text(t.cell(i, 0), a, size=10, bold=True, color=NAVY)
+        cell_text(t.cell(i, 1), b, size=10)
+
+    section_title(doc, "Notes")
+    note_box(doc, "Why item 7 of task 3 is Not Given",
+             "The talk says Shakespeare wrote his plays in her time. It never says she met "
+             "him or wrote with him. Students who answer F are reading the world, not the "
+             "text; students who answer T are reading a film.")
+    note_box(doc, "How to read it",
+             "First reading: normal speed, no stopping, students only tick task 2. Second "
+             "reading: slow down a little and pause at ||. If the group is weak, read "
+             "paragraph 7 a third time on its own.")
+    note_box(doc, "Three more ways to use the same script",
+             "Running dictation (cut into ten paragraphs, tape to the walls, one runs and "
+             "dictates, one writes). Shadowing paragraph 7 line by line, then one volunteer "
+             "says the quotation standing up. Retell relay: one sentence each in the Past "
+             "Simple, wrong tense sends the chain back to the start.")
+    note_box(doc, "Where the facts come from (checked 13.09.2026)", M.TEACHER_EVIDENCE)
+    return doc
+
+
+def monday_great_doc():
+    doc = new_doc()
+    kit_title(doc, "What makes a great person?",
+              "Session 2 · build your criteria, then test them")
+
+    task_head(doc, 1, "Your criteria", "Tick five alone. Then agree on three as a team.")
+    n = (len(M.CRITERIA) + 1) // 2
+    t = grid(doc, n, 4, widths=[1.2, 7.2, 1.2, 7.2])
+    for i, c_ in enumerate(M.CRITERIA):
+        r, c = i % n, (i // n) * 2
+        cell_text(t.cell(r, c), "[  ]", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(r, c + 1), txt(c_), size=10)
+
+    para(doc, "", space_after=4)
+    t = grid(doc, 4, 2, widths=[5.8, 11.0])
+    cell_text(t.cell(0, 0), "OUR TEAM'S THREE CRITERIA", size=9.5, bold=True, color=NAVY)
+    cell_text(t.cell(0, 1), "WHY THIS ONE AND NOT ANOTHER?", size=9.5, bold=True, color=NAVY)
+    for r in range(1, 4):
+        for c in range(2):
+            cell_text(t.cell(r, c), "")
+
+    task_head(doc, 2, "Evidence hunt", "No year, no evidence.")
+    t = grid(doc, 4, 4, widths=[0.9, 4.6, 8.7, 2.6])
+    for j, h in enumerate(("#", "CRITERION", "WHAT ELIZABETH ACTUALLY DID", "YEAR")):
+        cell_text(t.cell(0, j), h, size=9.5, bold=True, color=NAVY)
+    for r in range(1, 4):
+        cell_text(t.cell(r, 0), str(r), align=WD_ALIGN_PARAGRAPH.CENTER, color=RED)
+        for c in range(1, 4):
+            cell_text(t.cell(r, c), "\n")
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    task_head(doc, 3, "The greatness test",
+              "Four things she really did. Score each 1–3 against YOUR criteria.")
+    t = grid(doc, len(M.GREATNESS_TEST), 3, widths=[0.9, 13.3, 2.6])
+    for i, (what, so) in enumerate(M.GREATNESS_TEST):
+        cell_text(t.cell(i, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        c = t.cell(i, 1)
+        cell_text(c, txt(what), size=10)
+        q = c.add_paragraph()
+        q.paragraph_format.space_after = Pt(2)
+        rr = q.add_run(txt(so))
+        rr.italic = True
+        rr.font.size = Pt(9.5)
+        rr.font.color.rgb = GREY
+        cell_text(t.cell(i, 2), "1   2   3", bold=True, align=WD_ALIGN_PARAGRAPH.CENTER)
+
+    task_head(doc, 4, "Both sides",
+              "A team that cannot argue the other side has not understood its own.")
+    para(doc, f'Motion: "{txt(M.DEBATE_MOTION)}"  Write three arguments on each side.',
+         size=10.5, space_after=4)
+    t = grid(doc, 4, 2, widths=[8.4, 8.4])
+    cell_text(t.cell(0, 0), "FOR – BECAUSE SHE …", size=9.5, bold=True, color=NAVY)
+    cell_text(t.cell(0, 1), "AGAINST – BUT SHE …", size=9.5, bold=True, color=NAVY)
+    for r in range(1, 4):
+        for c in range(2):
+            cell_text(t.cell(r, c), "\n")
+    note_box(doc, "Where the hard facts in task 3 come from", M.TEACHER_EVIDENCE)
+    return doc
+
+
+def monday_stage_doc():
+    doc = new_doc()
+    kit_title(doc, "Ten minutes on stage",
+              "Six roles · everybody speaks · nobody runs over")
+
+    task_head(doc, 1, "Who does what", "Write a real name in the last column.")
+    t = grid(doc, len(M.ROLES), 5, widths=[0.8, 3.4, 2.6, 6.4, 3.6])
+    for i, (no, role, tm, what) in enumerate(M.ROLES):
+        cell_text(t.cell(i, 0), no, bold=True, color=RED, align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i, 1), txt(role), bold=True, color=NAVY, size=10)
+        cell_text(t.cell(i, 2), txt(tm), size=9.5, color=RED)
+        cell_text(t.cell(i, 3), txt(what), size=9.5)
+        cell_text(t.cell(i, 4), "", size=9.5)
+
+    task_head(doc, 2, "Rehearsal checklist", "One student holds this and ticks during the run.")
+    n = (len(M.CHECKLIST) + 1) // 2
+    t = grid(doc, n, 4, widths=[1.2, 7.2, 1.2, 7.2])
+    for i, c_ in enumerate(M.CHECKLIST):
+        r, c = i % n, (i // n) * 2
+        cell_text(t.cell(r, c), "[  ]", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(r, c + 1), txt(c_), size=10)
+
+    task_head(doc, 3, "The fix list", "Three things. Three.")
+    t = grid(doc, 4, 1, widths=[16.8])
+    cell_text(t.cell(0, 0), "AFTER REHEARSAL 1 – THREE THINGS WE CHANGE (NOT FOUR)",
+              size=9.5, bold=True, color=NAVY)
+    for r in range(1, 4):
+        cell_text(t.cell(r, 0), "\n")
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    section_title(doc, "Sentence frames – steal these")
+    for title, xs in M.FRAMES:
+        para(doc, txt(title).upper(), size=10, bold=True, color=RED,
+             space_before=8, space_after=2)
+        for x in xs:
+            p = doc.add_paragraph(style="List Bullet")
+            p.paragraph_format.space_after = Pt(1)
+            p.add_run(txt(x)).font.size = Pt(10)
+    note_box(doc, "The one rule about the Past Simple on stage",
+             "Everything that happened before today is Past Simple: she was, she became, "
+             "she did not marry, did she marry? Everything you think now is present: we "
+             "think, this shows, our answer is. Mixing the two is the single mistake the "
+             "room will hear.")
+    note_box(doc, "What a ten-minute talk is not",
+             "It is not a Wikipedia page read out loud. The story of the life is two minutes "
+             "of the ten. The other eight are your answer to the question, and the evidence "
+             "for it.")
+    return doc
+
+
+def monday_cards_doc():
+    doc = new_doc()
+    kit_title(doc, "Audience cards", "Cut into four · one card per team you watch")
+    for card in range(4):
+        t = grid(doc, len(M.FB_SCORES) + len(M.FB_OPEN) + 2, 2, widths=[11.4, 5.4])
+        cell_text(t.cell(0, 0), "AUDIENCE CARD", size=11, bold=True, color=NAVY)
+        cell_text(t.cell(0, 1), "", size=9)
+        cell_text(t.cell(1, 0), "Team: ____________________", size=9.5, color=GREY)
+        cell_text(t.cell(1, 1), "Their person: ______________", size=9.5, color=GREY)
+        for i, sc in enumerate(M.FB_SCORES):
+            cell_text(t.cell(2 + i, 0), txt(sc), size=9.5)
+            cell_text(t.cell(2 + i, 1), "1   2   3   4   5", size=9.5,
+                      align=WD_ALIGN_PARAGRAPH.CENTER)
+        base = 2 + len(M.FB_SCORES)
+        for i, (lab, _) in enumerate(M.FB_OPEN):
+            c = t.cell(base + i, 0)
+            cell_text(c, txt(lab), size=9.5, bold=True)
+            q = c.add_paragraph()
+            q.paragraph_format.space_after = Pt(2)
+            q.add_run("_" * 60).font.size = Pt(9.5)
+            cell_text(t.cell(base + i, 1), "", size=9.5)
+        para(doc, "— — — — — — — — — — — — —  cut here  — — — — — — — — — — — — —",
+             size=8, color=GREY, align=WD_ALIGN_PARAGRAPH.CENTER,
+             space_before=4, space_after=6)
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    section_title(doc, "Your three votes – tear off and post at 15.20")
+    t = grid(doc, 3, 3, widths=[5.6, 5.6, 5.6])
+    for i, (title, why) in enumerate(M.VOTES):
+        cell_text(t.cell(0, i), txt(title), size=11, bold=True, color=RED,
+                  align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(1, i), txt(why), size=9, color=GREY,
+                  align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(2, i), "______________", align=WD_ALIGN_PARAGRAPH.CENTER)
+    return doc
+
+
+def monday_certs_doc():
+    doc = new_doc()
+    for i, (title, why, grp) in enumerate(M.CERTS):
+        if i:
+            doc.add_section(WD_SECTION.NEW_PAGE)
+        para(doc, "", space_after=30)
+        para(doc, txt(title), size=22, bold=True, color=RED,
+             align=WD_ALIGN_PARAGRAPH.CENTER, space_after=6)
+        para(doc, txt(why), size=11, italic=True, color=GREY,
+             align=WD_ALIGN_PARAGRAPH.CENTER, space_after=20)
+        para(doc, "AWARDED TO", size=9.5, bold=True, color=NAVY,
+             align=WD_ALIGN_PARAGRAPH.CENTER, space_after=10)
+        para(doc, "_" * 46, size=14, align=WD_ALIGN_PARAGRAPH.CENTER, space_after=10)
+        para(doc, txt(grp), size=11, bold=True, color=RED,
+             align=WD_ALIGN_PARAGRAPH.CENTER, space_after=24)
+        t = grid(doc, 1, 2, widths=[8.4, 8.4])
+        t.style = "Normal Table"
+        cell_text(t.cell(0, 0), "Teacher  ______________________", size=9, color=GREY)
+        cell_text(t.cell(0, 1), "Date  ______________________", size=9, color=GREY,
+                  align=WD_ALIGN_PARAGRAPH.RIGHT)
+        para(doc, txt(M.CERT_FOOT), size=8.5, color=GREY,
+             align=WD_ALIGN_PARAGRAPH.CENTER, space_before=16)
+    return doc
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     B.write_html()          # fixes the matching and numbers keys, exactly as the PDFs use them
@@ -451,7 +808,14 @@ if __name__ == "__main__":
            + [("mixed-round", mixed_doc()), ("answer-key", key_doc())]
            + [(f"grammar-{d['slug']}", grammar_doc(d)) for d in G.GRAMMAR_PEOPLE]
            + [("grammar-mixed", grammar_doc(G.MIXED, mixed=True)),
-              ("grammar-answer-key", grammar_key_doc())])
+              ("grammar-answer-key", grammar_key_doc()),
+              ("monday-lesson-plan", monday_plan_doc()),
+              ("monday-listening", monday_listening_doc()),
+              ("monday-audio-script", monday_script_doc()),
+              ("monday-great-person", monday_great_doc()),
+              ("monday-presentation-kit", monday_stage_doc()),
+              ("monday-audience-cards", monday_cards_doc()),
+              ("monday-certificates", monday_certs_doc())])
     docs = [(f"{i:02d}-{name}", doc) for i, (name, doc) in enumerate(seq, 1)]
     for name, doc in docs:
         path = os.path.join(OUT, name + ".docx")

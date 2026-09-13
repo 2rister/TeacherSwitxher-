@@ -15,7 +15,7 @@ IMG = os.path.join(os.path.dirname(HERE), "materials", "img")
 PAPER = (243, 232, 208)          # --paper, so the flattened edge disappears into the frame
 SIZE = (480, 600)
 
-for name in ("newton", "lennon", "diana"):
+for name in ("newton", "lennon", "diana", "elizabeth"):
     src = os.path.join(IMG, f"{name}.jpg")
     flat = Image.open(src).convert("RGB").resize(SIZE, Image.LANCZOS)
     dst = os.path.join(IMG, f"{name}-thumb.jpg")

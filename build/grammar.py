@@ -114,11 +114,44 @@ DIANA = dict(
     ],
 )
 
-GRAMMAR_PEOPLE = [NEWTON, LENNON, DIANA]
+ELIZABETH = dict(
+    slug="elizabeth-i", name="Elizabeth I", dates="1533 – 1603",
+    portrait="elizabeth-thumb.jpg",
+    mc=[
+        ("Elizabeth ____ born in Greenwich in 1533.", ["is", "was", "were"], 1),
+        ("She ____ the daughter of Henry VIII and Anne Boleyn.", ["was", "were", "did"], 0),
+        ("She ____ Latin, French and Italian as a child.", ["studied", "studyed", "study"], 0),
+        ("In 1554 her sister Mary ____ her in the Tower of London.", ["did put", "putted", "put"], 2),
+        ("____ Elizabeth become queen in 1558?", ["Did", "Was", "Does"], 0),
+        ("She ____ queen for 44 years.", ["were", "was", "did"], 1),
+        ("Elizabeth ____ marry.", ["wasn&#8217;t", "didn&#8217;t", "don&#8217;t"], 1),
+        ("In 1588 the English ____ the Spanish Armada.", ["beat", "beated", "beaten"], 0),
+        ("____ the queen interested in the theatre?", ["Did", "Was", "Were"], 1),
+        ("Where ____ Elizabeth live when she was a child?", ["was", "did", "does"], 1),
+        ("She ____ a big orange wig.", ["weared", "wear", "wore"], 2),
+        ("Elizabeth ____ in 1603.", ["die", "was died", "died"], 2),
+    ],
+    bracket=[
+        ("Elizabeth __________ (be) born in Greenwich in 1533.", "was"),
+        ("She __________ (study) Latin, French and Italian as a child.", "studied"),
+        ("In 1554 her sister Mary __________ (send) her to the Tower of London.", "sent"),
+        ("Elizabeth __________ (become) queen in 1558.", "became"),
+        ("__________ (she / marry) a king or a prince?", "Did she marry"),
+        ("Elizabeth __________ (not / marry) anybody.",
+         "did not marry / didn&#8217;t marry"),
+        ("In 1588 the English __________ (beat) the Spanish Armada.", "beat"),
+        ("The queen __________ (love) the theatre and music.", "loved"),
+        ("How long __________ (Elizabeth / rule) England?", "did Elizabeth rule"),
+        ("She __________ (not / give) her power to a husband, but she __________ (keep) it.",
+         ["did not give / didn&#8217;t give", "kept"]),
+    ],
+)
+
+GRAMMAR_PEOPLE = [NEWTON, LENNON, DIANA, ELIZABETH]
 
 # -------------------------------------------------- Sheet X: all three together
 MIXED = dict(
-    slug="mixed", name="All Three Together", dates="Newton · Lennon · Diana",
+    slug="mixed", name="Mixed Practice", dates="Newton · Lennon · Diana",
     mc=[
         ("Isaac Newton ____ born in 1642, and John Lennon ____ born in 1940.",
          ["was / was", "were / was", "was / were"], 0),

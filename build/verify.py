@@ -107,8 +107,9 @@ print()
 # ------------------------------------------------------- required people only
 print("-- Requirements")
 check({d["name"] for d in C.PEOPLE} ==
-      {"Isaac Newton", "John Lennon", "Princess Diana", "Charles Darwin", "Horatio Nelson"},
-      "pack covers Newton, Lennon, Diana, Darwin and Nelson")
+      {"Isaac Newton", "John Lennon", "Princess Diana", "Charles Darwin",
+       "Horatio Nelson", "Elizabeth I"},
+      "pack covers Newton, Lennon, Diana, Darwin, Nelson and Elizabeth I")
 for d in C.PEOPLE:
     check(len(d["tf"]) == 8 and len(d["gaps"]) == 8 and len(d["qs"]) == 6 and len(d["match"]) == 5,
           f"{d['name']}: full exercise set (8 T/F, 8 gaps, 6 questions, 5 matches)")
@@ -281,6 +282,20 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
         check(not bad, f"{d['name']}: Word test options match the PDF, in order",
               f"items {bad}")
 
+    # the Monday listening sheet shuffles twice; both columns must match the PDF
+    import monday as _M
+    f = os.path.join(DOCX, SHEETFILE["monday-listening"] + ".docx")
+    if os.path.exists(f):
+        for label, src, key, n_ in (("words", _M.L_WORDS, _M._lwords_key, len(_M.L_WORDS)),
+                                    ("numbers", _M.L_NUMBERS, _M._lnums_key, len(_M.L_NUMBERS))):
+            want = [None] * n_
+            for j, slot in enumerate(key):
+                want[slot] = html.unescape(re.sub("<[^>]+>", "", src[j][1]))
+            check(col(f, 4, n_, 3) == want,
+                  f"Word listening sheet: {label} column is in the same order as the PDF")
+    else:
+        check(False, "Word listening sheet exists")
+
     f = os.path.join(DOCX, SHEETFILE["mixed-round"] + ".docx")
     if os.path.exists(f):
         want = [None] * len(C.NUMBERS)
@@ -289,6 +304,95 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
         check(col(f, 4, len(C.NUMBERS), 3) == want,
               "Word numbers round is in the same order as the PDF")
     print()
+
+# ------------------------------------------------- Monday 14.09 lesson kit
+print("-- Monday lesson kit")
+import monday as M
+
+# the timetable must still be the one the school sent
+check([a for a, _, _ in M.TIMETABLE] ==
+      ["11.00 &#8211; 11.45", "11.45 &#8211; 12.00", "12.00 &#8211; 13.35",
+       "13.35 &#8211; 14.05", "14.05 &#8211; 15.40"],
+      "timetable is unchanged from the school's plan")
+
+# each session's stages must fill the session, not overrun it
+for label, rows, want in (("11.00-11.45", M.STAGE1, 45),
+                          ("12.00-13.35", M.STAGE2, 95),
+                          ("14.05-15.40", M.STAGE3, 95)):
+    got = sum(m for _, m, _, _, _ in rows)
+    check(got == want, f"session {label}: stage times add up to {want} minutes",
+          f"they add up to {got}")
+    clocks = [float(c.replace(".", "")) for c, _, _, _, _ in rows]
+    check(clocks == sorted(clocks), f"session {label}: the clock never goes backwards")
+
+# the first stage of each session must start when the session starts
+for rows, start in ((M.STAGE1, "11.00"), (M.STAGE2, "12.00"), (M.STAGE3, "14.05")):
+    check(rows[0][0] == start, f"session starting {start} begins at {start}")
+
+# listening
+check(sum(1 for _, t in M.L_TICK if t) == 5,
+      "first-listening task really has five things to tick")
+check(all(a in ("T", "F", "NG") for _, a in M.L_TF),
+      "every listening T/F/NG answer is a legal value")
+check(len({a for _, a in M.L_TF}) == 3, "T, F and NG all occur in the listening task")
+for name, key, src in (("words", getattr(M, "_lwords_key", None), M.L_WORDS),
+                       ("numbers", getattr(M, "_lnums_key", None), M.L_NUMBERS)):
+    check(key is not None and sorted(key) == list(range(len(src))),
+          f"listening {name} key is a complete permutation")
+    if key:
+        check(all(i != k for i, k in enumerate(key)),
+              f"listening {name}: no half lines up with its own stem")
+check(len({n for n, _ in M.L_NUMBERS}) == len(M.L_NUMBERS),
+      "listening numbers task has no repeated number")
+
+# the script
+script_words = sum(len(norm(t).split()) for t, _ in M.SCRIPT)
+check(250 <= script_words <= 400,
+      "audio script is between 250 and 400 words (2.5-4 minutes read aloud)",
+      f"{script_words} words")
+script_text = norm(" ".join(t for t, _ in M.SCRIPT))
+# the two corrections the class text needed must survive in the script
+check("twentyfourth of march" in script_text and "sixteen oh three" in script_text,
+      "script gives the corrected death date (24 March 1603)")
+check("fortyfour years" in script_text, "script gives the corrected reign length (44 years)")
+check("fourteenth of march" not in script_text, "script does not repeat the wrong death date")
+# things the record does not support must not have crept in
+for bad in ("shakespeare was her favourite", "makeup killed", "poison"):
+    check(bad not in script_text, f"script avoids the unsupported claim: {bad}")
+
+# the ten-minute presentation must actually add up to ten minutes and no gaps
+def mins(t):
+    m, sec = t.split(":")
+    return int(m) + int(sec) / 60
+spans = []
+for _, _, tm, _ in M.ROLES:
+    a, b = [x.strip() for x in tm.replace("&#8211;", "-").split("-")]
+    spans.append((mins(a), mins(b)))
+check(spans[0][0] == 0 and spans[-1][1] == 10, "the six roles fill exactly ten minutes")
+check(all(spans[i][1] == spans[i + 1][0] for i in range(len(spans) - 1)),
+      "the six roles leave no gap and no overlap")
+check(all(b - a <= 2.5 for a, b in spans), "no single speaker holds the floor over 2.5 minutes")
+check(len(M.ROLES) == 6, "there is a role for every member of the team")
+
+# the awards the school asked for must all exist
+titles = {t for t, _, _ in M.CERTS}
+check("MOST ACTIVE PARTICIPANT" in titles, "certificate for the most active participants")
+check("CHAMPION OF THE DEBATE" in titles, "certificate for the debate winners")
+check("CHAMPION OF THE GAME" in titles, "certificate for the winners of the game")
+check(sum(1 for t, _, _ in M.CERTS if t == "MOST ACTIVE PARTICIPANT") == 2,
+      "two 'most active' certificates, as the school asked (1-2 per group)")
+check(len(M.VOTES) == 3, "the voting slip covers all three awards")
+
+# every Monday sheet must have reached print
+MPDF = os.path.join(os.path.dirname(HERE), "materials", "pdf")
+for slug in ("monday-lesson-plan", "monday-listening", "monday-audio-script",
+             "monday-great-person", "monday-presentation-kit",
+             "monday-audience-cards", "monday-certificates"):
+    fn = SHEETFILE.get(slug)
+    check(fn is not None, f"{slug}: sheet is in the running order")
+    if fn:
+        check(os.path.exists(os.path.join(MPDF, fn + ".pdf")), f"{slug}: PDF exists")
+print()
 
 print(f"\n{checks - len(fails)}/{checks} checks passed.")
 if fails:

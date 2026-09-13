@@ -37,6 +37,8 @@ SOURCES = {
                (0.32, 0.02, 0.82, 0.52), 1.24, 1.04, "Maull & Fox, c. 1854 - public domain"),
     "nelson": ("https://upload.wikimedia.org/wikipedia/commons/7/72/HoratioNelson1.jpg",
                (0.02, 0.00, 0.98, 0.90), 1.22, 1.10, "Lemuel Francis Abbott, 1799 - public domain"),
+    "elizabeth": ("https://upload.wikimedia.org/wikipedia/commons/e/eb/Elizabeth_I_in_coronation_robes.jpg",
+               (0.34, 0.015, 0.61, 0.29), 1.10, 1.10, "after Levina Teerlinc, c. 1600 - public domain"),
 }
 
 
