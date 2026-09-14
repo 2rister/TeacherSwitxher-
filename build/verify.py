@@ -296,6 +296,17 @@ if os.path.isdir(DOCX) and os.listdir(DOCX):
     else:
         check(False, "Word listening sheet exists")
 
+    import phrases as _P
+    f = os.path.join(DOCX, SHEETFILE["phrases-remarkable-people"] + ".docx")
+    if os.path.exists(f):
+        want = [None] * len(_P.NOUN_PAIRS)
+        for j, slot in enumerate(_P._noun_key):
+            want[slot] = html.unescape(re.sub("<[^>]+>", "", _P.NOUN_PAIRS[j][1]))
+        check(col(f, 4, len(_P.NOUN_PAIRS), 3) == want,
+              "Word phrases sheet: matching column is in the same order as the PDF")
+    else:
+        check(False, "Word phrases sheet exists")
+
     f = os.path.join(DOCX, SHEETFILE["mixed-round"] + ".docx")
     if os.path.exists(f):
         want = [None] * len(C.NUMBERS)
@@ -388,6 +399,79 @@ MPDF = os.path.join(os.path.dirname(HERE), "materials", "pdf")
 for slug in ("monday-lesson-plan", "monday-listening", "monday-audio-script",
              "monday-great-person", "monday-presentation-kit",
              "monday-audience-cards", "monday-certificates"):
+    fn = SHEETFILE.get(slug)
+    check(fn is not None, f"{slug}: sheet is in the running order")
+    if fn:
+        check(os.path.exists(os.path.join(MPDF, fn + ".pdf")), f"{slug}: PDF exists")
+print()
+
+# ------------------------------------------- poster collocations reading sheet
+print("-- Talk About Remarkable People")
+import phrases as P
+
+paras = [norm(t) for _, t in P.READING]
+
+# every phrase in task 1 must be findable, and in exactly one paragraph
+for phrase, want in P.FIND:
+    probe = norm(" ".join(phrase.split()[2:]))      # drop the leading "to <verb>"
+    hits = [i for i, t in enumerate(paras, 1) if probe in t]
+    check(hits == [want], f"task 1: '{phrase}' is in paragraph {want} and nowhere else",
+          f"found in {hits or 'no paragraph'}")
+
+# the word bank must still be exactly the answers
+check(sorted(P.VERB_BANK) == sorted(a for _, a in P.VERB_GAPS),
+      "task 4: the word box matches the answers")
+check(all("____" in s_ for s_, _ in P.VERB_GAPS),
+      "task 4: every sentence actually has a gap")
+# every collocation practised in task 4 must really occur in the reading:
+# the answer verb plus the two words that follow the gap
+for s_, a in P.VERB_GAPS:
+    after = norm(s_.split("____________", 1)[1]).split()
+    probe = " ".join([norm(a)] + after[:2])
+    check(any(probe in t for t in paras),
+          f"task 4: the collocation '{probe}' is in the reading")
+
+# who-is-it uses all five people and only legal letters
+letters = {a for _, a in P.WHO}
+check(letters == {"E", "N", "L", "D", "I"}, "task 2: all five people are used, and only those",
+      str(sorted(letters)))
+
+# the matching halves must be a permutation that never lines up with its own stem
+key = getattr(P, "_noun_key", None)
+check(key is not None and sorted(key) == list(range(len(P.NOUN_PAIRS))),
+      "task 3: the key is a complete permutation")
+if key:
+    check(all(i != k for i, k in enumerate(key)),
+          "task 3: no half lines up with its own stem")
+check(len({b for _, b in P.NOUN_PAIRS}) == len(P.NOUN_PAIRS),
+      "task 3: no noun appears twice, so every item has one answer")
+
+check({a for _, a in P.FACT_OPINION} == {"FACT", "OPINION"},
+      "task 5: both answers occur")
+
+# the ages at death in the new text must follow from the dates in the pack
+YEARS = {d["name"]: [int(x) for x in re.findall(r"\d{4}", html.unescape(d["dates"]))]
+         for d in C.PEOPLE}
+AGES = {"Elizabeth I": 69, "Horatio Nelson": 47, "John Lennon": 40,
+        "Princess Diana": 36, "Isaac Newton": 84}
+reading = norm(" ".join(t for _, t in P.READING))
+for name, age in AGES.items():
+    born, died = YEARS[name]
+    check(died - born - 1 <= age <= died - born,
+          f"{name}: 'died at the age of {age}' fits {born}-{died}")
+    check(f"died at the age of {age}" in reading,
+          f"{name}: the reading gives the age at death")
+
+# the four value judgements must be flagged, not smuggled in as facts
+JUDGEMENTS = ["influential leader", "inspiring leader", "changed the course"]
+flagged = norm(" ".join(q for q, _ in P.FACT_OPINION))
+for j in JUDGEMENTS[:2]:
+    check(j in flagged or j in norm(P.TEACHER_NOTE),
+          f"the phrase '{j}' is named as a judgement somewhere the teacher sees it")
+check(sum(1 for _, a in P.FACT_OPINION if a == "OPINION") >= 3,
+      "task 5 has at least three opinions to catch")
+
+for slug in ("phrases-remarkable-people", "phrases-answer-key"):
     fn = SHEETFILE.get(slug)
     check(fn is not None, f"{slug}: sheet is in the running order")
     if fn:

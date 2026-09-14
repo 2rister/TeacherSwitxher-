@@ -20,6 +20,7 @@ sys.path.insert(0, HERE)
 import content as C
 import grammar as G
 import monday as M
+import phrases as P
 import render as R
 
 KICKER = "Interesting People &#183; Reading &amp; Facts &#183; Level A2"
@@ -738,6 +739,120 @@ def certificates():
     return R.head("Certificates") + "".join(pages) + "</body></html>"
 
 
+
+# ============================================ poster collocations: reading sheet
+P_KICK = "Talk About Remarkable People &#183; Collocations &#183; Level A2"
+P_FOOT = "Phrases &#183; Reading &#183; Writing"
+
+
+def phrases_sheet():
+    paras = "".join(f'<p><span class="pn">{i}</span><b class="who">{h}</b><br>{t}</p>'
+                    for i, (h, t) in enumerate(P.READING, 1))
+
+    t1 = ('<ol class="items findlist">' + "".join(
+        f'<li><span class="frow"><span>{ph}</span>'
+        f'<span class="parabox"></span></span></li>' for ph, _ in P.FIND) + "</ol>")
+
+    t2 = ('<ol class="items">' + "".join(
+        f'<li><div class="tf-row"><span class="stmt">{q}</span>'
+        '<span class="tf-opts wide"><span>E</span><span>N</span><span>L</span>'
+        '<span>D</span><span>I</span></span></div>'
+        '<span class="why-rule">why?</span></li>' for q, _ in P.WHO) + "</ol>")
+
+    rhs, key = shuffled_rhs(P.NOUN_PAIRS)
+    P._noun_key = key
+    t3 = R.match_body(P.NOUN_PAIRS, rhs)
+    t4 = R.gap_body(P.VERB_BANK, P.VERB_GAPS)
+
+    t5 = ('<ol class="items">' + "".join(
+        f'<li><div class="tf-row"><span class="stmt">{q}</span>'
+        '<span class="tf-opts wide"><span>FACT</span><span>OPINION</span></span>'
+        '</div></li>' for q, _ in P.FACT_OPINION) + "</ol>")
+
+    t6 = (f'<p style="margin:0 0 2.4mm;font-size:10.2pt">{P.WRITE_RULE}</p>'
+          '<ol class="items">' + "".join(
+              f'<li><i>{st}</i><span class="answer-rule"></span>'
+              f'<span class="answer-rule"></span></li>'
+              for st in P.STARTERS) + "</ol>")
+
+    p1 = f"""<div class="page">
+{R.masthead(P_KICK, "PHRASES")}
+<div class="kit-head"><h1>Talk About <span class="r">Remarkable People</span></h1>
+<div class="sub">{P.STRAP}</div></div>
+<section class="reading lives">
+  <div class="reading-head"><h2>Read the five lives</h2>
+    <span class="hint">The phrases in bold are the ones you have to learn.</span></div>
+  {paras}
+</section>
+{R.glossary(P.GLOSSARY)}
+{R.foot("Remarkable People", P_FOOT, "Phrases &#183; p. 1")}
+</div>"""
+
+    p2 = f"""<div class="page">
+{R.masthead(P_KICK, "PHRASES")}
+<div class="tasks">
+{R.task(1, "Find the phrase", "Which paragraph is it in? Write 1&#8211;5.", t1)}
+{R.task(2, "Who is it?", P.WHO_LEGEND, t2, navy=True)}
+</div>
+{R.foot("Remarkable People", P_FOOT, "Phrases &#183; p. 2")}
+</div>"""
+
+    p3 = f"""<div class="page">
+{R.masthead(P_KICK, "PHRASES")}
+<div class="tasks">
+{R.task(3, "Build the phrase", "Write a, b, c, d, e, f, g or h.", t3)}
+{R.task(4, "The missing verb", "Use the words in the box. Each word once.", t4, navy=True)}
+{R.task(5, "Fact or opinion?", "Circle one. An opinion needs a reason.", t5)}
+</div>
+{R.foot("Remarkable People", P_FOOT, "Phrases &#183; p. 3")}
+</div>"""
+
+    p4 = f"""<div class="page">
+{R.masthead(P_KICK, "PHRASES")}
+<div class="tasks">
+{R.task(6, "Now your person", "Six sentences. Every opinion pays with a fact.", t6)}
+</div>
+<div class="note"><b>Before you hand it in</b>
+Read your six sentences again and find every word that somebody could argue with &#8211;
+<i>great</i>, <i>influential</i>, <i>remarkable</i>, <i>inspiring</i>. Each of them needs a
+date, a number or an event standing right behind it. If it has none, cross the word out or
+find the fact.</div>
+{R.foot("Remarkable People", P_FOOT, "Phrases &#183; p. 4")}
+</div>"""
+    return R.head("Talk About Remarkable People &#8211; collocations") + p1 + p2 + p3 + p4 + "</body></html>"
+
+
+def phrases_key():
+    k1 = " &#183; ".join(f'{i} <b>{n}</b>' for i, (_, n) in enumerate(P.FIND, 1))
+    k2 = " &#183; ".join(f'{i}<span class="key-tag">{a}</span>'
+                         for i, (_, a) in enumerate(P.WHO, 1))
+    k3 = " &#183; ".join(f'{i} <b>{L(k)}</b>' for i, k in enumerate(P._noun_key, 1))
+    k4 = " &#183; ".join(f'{i} <b>{a}</b>' for i, (_, a) in enumerate(P.VERB_GAPS, 1))
+    k5 = " &#183; ".join(f'{i} <b>{a}</b>' for i, (_, a) in enumerate(P.FACT_OPINION, 1))
+    full = "".join(f'<div><b>{b}</b> &#8211; <span>{a}</span></div>'
+                   for a, b in P.NOUN_PAIRS)
+
+    p1 = f"""<div class="page">
+{R.masthead("Remarkable People &#183; Answer key &#183; For the teacher", "PKEY")}
+<div class="kit-head"><h1>Phrases <span class="r">Answer Key</span></h1>
+<div class="sub">Talk About Remarkable People &#183; for the teacher only</div></div>
+<div class="key-block">
+<p style="margin:0 0 1.8mm;font-size:9.9pt"><span class="key-tag">1 FIND THE PHRASE</span> {k1}</p>
+<p style="margin:0 0 1.8mm;font-size:9.9pt"><span class="key-tag">2 WHO IS IT?</span> {k2}</p>
+<p style="margin:0 0 1.8mm;font-size:9.9pt"><span class="key-tag">3 BUILD THE PHRASE</span> {k3}</p>
+<p style="margin:0 0 1.8mm;font-size:9.9pt"><span class="key-tag">4 THE MISSING VERB</span> {k4}</p>
+<p style="margin:0;font-size:9.9pt"><span class="key-tag">5 FACT OR OPINION</span> {k5}</p>
+</div>
+<h3 class="kit-h sp">Task 3 &#183; the eight phrases in full</h3>
+<section class="glossary"><div class="glossary-body">{full}</div></section>
+<div class="note" style="margin-top:4mm"><b>Task 6 has no key, and that is the point</b>{P.TEACHER_NOTE}</div>
+<div class="note" style="border-left-color:#1b2a4a;background:rgba(27,42,74,.055)">
+<b>Where the facts come from</b>{P.SOURCE_NOTE}</div>
+{R.foot("Phrases key", P_FOOT, "Phrases key &#183; p. 1")}
+</div>"""
+    return R.head("Remarkable People &#8211; answer key") + p1 + "</body></html>"
+
+
 # ----------------------------------------------------------------- rendering
 SHEETS = []
 
@@ -757,7 +872,9 @@ def write_html():
               ("monday-great-person", great_person_sheet()),
               ("monday-presentation-kit", presentation_kit()),
               ("monday-audience-cards", feedback_sheet()),
-              ("monday-certificates", certificates())])
+              ("monday-certificates", certificates()),
+              ("phrases-remarkable-people", phrases_sheet()),
+              ("phrases-answer-key", phrases_key())])
     SHEETS[:] = [(f"{i:02d}-{name}", html) for i, (name, html) in enumerate(seq, 1)]
     # one file with every sheet, for printing the whole pack in a single job
     body = "".join(h[h.index("<body>") + 6: h.index("</body>")] for _, h in SHEETS)

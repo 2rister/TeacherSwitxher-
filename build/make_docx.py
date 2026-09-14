@@ -26,6 +26,7 @@ sys.path.insert(0, HERE)
 import content as C
 import grammar as G
 import monday as M
+import phrases as P
 import build as B
 
 RED = RGBColor(0x9D, 0x22, 0x26)
@@ -799,6 +800,154 @@ def monday_certs_doc():
     return doc
 
 
+
+# ============================================ poster collocations: reading sheet
+def phrases_doc():
+    doc = new_doc()
+    kit_title(doc, "Talk about remarkable people",
+              "Five short lives · the phrases you need to describe them")
+    para(doc, "READ THE FIVE LIVES", size=13, bold=True, color=NAVY,
+         space_before=6, space_after=2)
+    para(doc, "The phrases in bold are the ones you have to learn.",
+         size=9.5, italic=True, color=GREY, space_after=6)
+    for i, (h, t) in enumerate(P.READING, 1):
+        para(doc, f"{i}   {txt(h)}", size=10, bold=True, color=RED,
+             space_before=6, space_after=2)
+        q = doc.add_paragraph()
+        q.paragraph_format.space_after = Pt(5)
+        q.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        # keep the bold on the target phrases: split on the <b> tags
+        for piece in re.split(r"(<b>.*?</b>)", t):
+            if not piece:
+                continue
+            r = q.add_run(txt(piece))
+            r.font.size = Pt(11)
+            if piece.startswith("<b>"):
+                r.bold = True
+                r.font.color.rgb = NAVY
+
+    para(doc, "WORDS TO KNOW", size=12, bold=True, color=NAVY, space_before=8, space_after=4)
+    t = grid(doc, (len(P.GLOSSARY) + 1) // 2, 2, widths=[8.4, 8.4])
+    for i, (w, expl) in enumerate(P.GLOSSARY):
+        c = t.cell(i // 2, i % 2)
+        pp = c.paragraphs[0]
+        pp.paragraph_format.space_after = Pt(2)
+        r = pp.add_run(txt(w))
+        r.bold = True
+        r.font.size = Pt(10)
+        r.font.color.rgb = RED
+        pp.add_run(" – " + txt(expl)).font.size = Pt(10)
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    task_head(doc, 1, "Find the phrase", "Which paragraph is it in? Write 1–5.")
+    t = grid(doc, len(P.FIND), 3, widths=[1.0, 13.6, 2.2])
+    for i, (ph, _) in enumerate(P.FIND):
+        cell_text(t.cell(i, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i, 1), txt(ph))
+        cell_text(t.cell(i, 2), "", align=WD_ALIGN_PARAGRAPH.CENTER)
+
+    task_head(doc, 2, "Who is it?", txt(P.WHO_LEGEND))
+    t = grid(doc, len(P.WHO) * 2, 3, widths=[1.0, 12.2, 3.6])
+    for i, (q, _) in enumerate(P.WHO):
+        cell_text(t.cell(i * 2, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i * 2, 1), txt(q))
+        cell_text(t.cell(i * 2, 2), "E   N   L   D   I", bold=True,
+                  align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i * 2 + 1, 0), "")
+        cell_text(t.cell(i * 2 + 1, 1), "why? ______________________________________",
+                  size=9, color=GREY)
+        cell_text(t.cell(i * 2 + 1, 2), "")
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    rhs = [P.NOUN_PAIRS[P._noun_key.index(i)][1] for i in range(len(P.NOUN_PAIRS))]
+    task_head(doc, 3, "Build the phrase", "Write a, b, c, d, e, f, g or h.")
+    t = grid(doc, len(P.NOUN_PAIRS), 4, widths=[1.0, 6.4, 1.0, 8.4])
+    for i, ((a, _), r) in enumerate(zip(P.NOUN_PAIRS, rhs)):
+        cell_text(t.cell(i, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i, 1), txt(a))
+        cell_text(t.cell(i, 2), f"{L(i)})", align=WD_ALIGN_PARAGRAPH.CENTER, color=RED)
+        cell_text(t.cell(i, 3), txt(r))
+
+    task_head(doc, 4, "The missing verb", "Use the words in the box. Each word once.")
+    bank = doc.add_table(rows=1, cols=1)
+    bank.style = "Table Grid"
+    shade(bank.cell(0, 0), "EFEFEF")
+    cell_text(bank.cell(0, 0), "   ·   ".join(txt(w) for w in P.VERB_BANK),
+              size=10.5, bold=True, color=NAVY, align=WD_ALIGN_PARAGRAPH.CENTER)
+    for i, (s_, _) in enumerate(P.VERB_GAPS, 1):
+        pp = doc.add_paragraph()
+        pp.paragraph_format.space_after = Pt(4)
+        r = pp.add_run(f"{i}.  ")
+        r.bold = True
+        r.font.color.rgb = RED
+        pp.add_run(txt(s_)).font.size = Pt(10.5)
+
+    task_head(doc, 5, "Fact or opinion?", "Circle one. An opinion needs a reason.")
+    t = grid(doc, len(P.FACT_OPINION), 3, widths=[1.0, 12.2, 3.6])
+    for i, (q, _) in enumerate(P.FACT_OPINION):
+        cell_text(t.cell(i, 0), f"{i + 1}.", align=WD_ALIGN_PARAGRAPH.CENTER)
+        cell_text(t.cell(i, 1), txt(q))
+        cell_text(t.cell(i, 2), "FACT   OPINION", bold=True,
+                  align=WD_ALIGN_PARAGRAPH.CENTER)
+
+    doc.add_section(WD_SECTION.NEW_PAGE)
+    task_head(doc, 6, "Now your person", "Six sentences. Every opinion pays with a fact.")
+    para(doc, txt(P.WRITE_RULE), size=10.5, space_after=6)
+    for i, st in enumerate(P.STARTERS, 1):
+        pp = doc.add_paragraph()
+        pp.paragraph_format.space_after = Pt(2)
+        r = pp.add_run(f"{i}.  ")
+        r.bold = True
+        r.font.color.rgb = RED
+        rr = pp.add_run(txt(st))
+        rr.italic = True
+        rr.font.size = Pt(10.5)
+        for _ in range(2):
+            para(doc, "_" * 92, size=10.5, color=GREY, space_after=3)
+    note_box(doc, "Before you hand it in",
+             "Read your six sentences again and find every word that somebody could argue "
+             "with - great, influential, remarkable, inspiring. Each of them needs a date, a "
+             "number or an event standing right behind it. If it has none, cross the word out "
+             "or find the fact.")
+    return doc
+
+
+def phrases_key_doc():
+    doc = new_doc()
+    kit_title(doc, "Phrases answer key",
+              "Talk about remarkable people · for the teacher only")
+    rows = [
+        ("1  Find the phrase", " · ".join(f"{i} {n}" for i, (_, n) in enumerate(P.FIND, 1))),
+        ("2  Who is it?", " · ".join(f"{i} {a}" for i, (_, a) in enumerate(P.WHO, 1))),
+        ("3  Build the phrase",
+         " · ".join(f"{i} {L(k)}" for i, k in enumerate(P._noun_key, 1))),
+        ("4  The missing verb",
+         " · ".join(f"{i} {a}" for i, (_, a) in enumerate(P.VERB_GAPS, 1))),
+        ("5  Fact or opinion",
+         " · ".join(f"{i} {a}" for i, (_, a) in enumerate(P.FACT_OPINION, 1))),
+    ]
+    t = grid(doc, len(rows), 2, widths=[4.6, 12.2])
+    for i, (a, b) in enumerate(rows):
+        cell_text(t.cell(i, 0), a, size=10, bold=True, color=NAVY)
+        cell_text(t.cell(i, 1), b, size=10)
+
+    section_title(doc, "Task 3 · the eight phrases in full")
+    t = grid(doc, (len(P.NOUN_PAIRS) + 1) // 2, 2, widths=[8.4, 8.4])
+    for i, (a, b) in enumerate(P.NOUN_PAIRS):
+        c = t.cell(i // 2, i % 2)
+        pp = c.paragraphs[0]
+        pp.paragraph_format.space_after = Pt(2)
+        r = pp.add_run(txt(a).replace("…", "").strip() + " " + txt(b))
+        r.font.size = Pt(10)
+        r.bold = True
+        r.font.color.rgb = NAVY
+
+    section_title(doc, "Notes")
+    note_box(doc, "Task 6 has no key, and that is the point", P.TEACHER_NOTE)
+    note_box(doc, "Where the facts come from", P.SOURCE_NOTE)
+    return doc
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     B.write_html()          # fixes the matching and numbers keys, exactly as the PDFs use them
@@ -815,7 +964,9 @@ if __name__ == "__main__":
               ("monday-great-person", monday_great_doc()),
               ("monday-presentation-kit", monday_stage_doc()),
               ("monday-audience-cards", monday_cards_doc()),
-              ("monday-certificates", monday_certs_doc())])
+              ("monday-certificates", monday_certs_doc()),
+              ("phrases-remarkable-people", phrases_doc()),
+              ("phrases-answer-key", phrases_key_doc())])
     docs = [(f"{i:02d}-{name}", doc) for i, (name, doc) in enumerate(seq, 1)]
     for name, doc in docs:
         path = os.path.join(OUT, name + ".docx")

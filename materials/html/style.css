@@ -453,3 +453,17 @@ ol.items.two > li { break-inside: avoid; }
 .cutline span { position: relative; background: var(--paper); padding: 0 3mm; font-size: 7.4pt;
                 letter-spacing: .18em; color: var(--ink-soft); text-transform: uppercase; }
 .cert + .cutline + .cert, .cutline + .cert { margin-top: 0; }
+
+/* ------------------------------------------ poster collocations reading sheet */
+.reading.lives p { margin-bottom: 3.2mm; }
+.reading.lives p .who { font-family: "Cinzel", serif; font-weight: 700; font-size: 9.4pt;
+                        letter-spacing: .12em; color: var(--red-deep); text-transform: uppercase; }
+.reading.lives p:first-of-type::first-letter { font-size: inherit; font-family: inherit;
+                                               float: none; line-height: inherit; margin: 0;
+                                               color: inherit; }
+.reading.lives b { font-weight: 700; color: var(--navy); }
+ol.findlist > li { margin-bottom: 1.4mm; }
+.frow { display: flex; align-items: baseline; gap: 2.4mm; }
+.parabox { display: inline-block; width: 8mm; height: 5mm; border: 1pt solid var(--ink);
+           background: rgba(255,250,236,.7); flex: 0 0 auto; margin-left: auto; }
+.tf-opts.wide span { min-width: 9mm; padding: 0 1.4mm; font-size: 8.4pt; }

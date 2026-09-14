@@ -60,3 +60,4 @@ table.evid th { background: #000; color: #fff; }
 .cert { border-color: #000; }
 .cert::after { border-color: #6a6a6a; }
 .slip { border-color: #000; }
+.parabox { background: #fff; border-color: #000; }

@@ -14,10 +14,13 @@ lesson's whole question is how we judge a person:
   * The teacher's original text said Elizabeth died on 14 March 1603 and
     reigned 45 years. The record says 24 March 1603 and 44 years. The corrected
     figures are used throughout.
-  * Two claims in circulation are NOT in the article and are not used anywhere:
-    that her white make-up poisoned her, and that Shakespeare was her favourite
-    writer. She is documented as loving the theatre; Shakespeare and Marlowe
-    are documented as writing in her reign. Those are the claims used.
+  * Two claims are not supported by the article: that her white make-up
+    poisoned her, and that Shakespeare was her favourite writer. Both still
+    stand in the reading text on Sheet VI, because that text is the teacher's
+    own and is reproduced as written, exactly as Newton's is. Neither is used
+    in any exercise, key, or line of this kit: the script says she loved the
+    theatre and that Shakespeare and Marlowe wrote in her reign, which is what
+    the record supports. The answer key carries a teacher's note saying so.
 """
 
 TITLE = "Monday 14 September &#183; Elizabeth I"

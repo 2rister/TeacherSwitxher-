@@ -575,6 +575,16 @@ TEACHER_NOTES = [
      "(3) Newton&#8217;s reflecting telescope (1671) impressed the <i>Royal Society</i>, which led to his "
      "election as a Fellow; there is no reliable source for the king congratulating him. "
      "The exercises test the text as written, so students are never marked wrong for these."),
+    ("Elizabeth&#8217;s text &#8211; two claims the record does not support",
+     "(1) The text says Shakespeare was her favourite writer. She is documented as loving the "
+     "theatre, and Shakespeare and Marlowe are documented as writing in her reign; a personal "
+     "favourite is not. (2) The text says the white make-up was a poison that perhaps killed "
+     "her slowly. It was lead-based and it is a popular story, but the cause of her death is "
+     "not known and no source establishes this. The text is printed as the teacher wrote it, "
+     "like Newton&#8217;s, and neither claim is used in any exercise, key or listening task on "
+     "Sheets [[#elizabeth-i]] or [[#grammar-elizabeth-i]] &#8211; both are there to be discussed out "
+     "loud. Two figures in the same text WERE corrected because they are simply wrong: she "
+     "died on 24 March 1603 (not the 14th) and reigned 44 years (not 45)."),
     ("Spelling",
      "The Newton text uses American spellings (&#8220;colors&#8221;) while the rest of the pack and the game "
      "use British ones (&#8220;colours&#8221;). Left as in the original. Change it in "
