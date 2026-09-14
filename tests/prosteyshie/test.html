@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<title>Простейшие (Protozoa) — тест</title><style>
+@page { size: A4; margin: 14mm 12mm 12mm 12mm; }
+
+:root {
+  --ink: #111;
+  --muted: #555;
+  --rule: #bbb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  font-size: 9.6pt;
+  line-height: 1.35;
+  color: var(--ink);
+  background: #fff;
+}
+
+header.sheet {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 5mm;
+  margin-bottom: 5mm;
+}
+
+h1 {
+  font-size: 15pt;
+  margin: 0 0 1mm;
+  letter-spacing: .2px;
+}
+
+.subtitle {
+  font-size: 9.5pt;
+  color: var(--muted);
+  margin: 0 0 4mm;
+}
+
+.fields {
+  display: flex;
+  gap: 6mm;
+  font-size: 9.5pt;
+}
+
+.fields span { flex: 1; border-bottom: 1px solid var(--ink); padding-bottom: 1mm; }
+.fields span.short { flex: 0 0 32mm; }
+
+.hint {
+  font-size: 8.5pt;
+  color: var(--muted);
+  margin: 3mm 0 4mm;
+  padding: 2mm 3mm;
+  border-left: 2px solid var(--rule);
+}
+
+.questions { column-count: 2; column-gap: 8mm; }
+
+.q {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin: 0 0 4.5mm;
+  padding-bottom: 3mm;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.q:last-child { border-bottom: none; }
+
+.q .stem {
+  display: flex;
+  gap: 2mm;
+  font-weight: 600;
+  margin-bottom: 1.6mm;
+}
+
+.q .num { flex: 0 0 auto; }
+
+.q figure { margin: 1.5mm 0 2mm; text-align: center; }
+
+.q img {
+  max-width: 100%;
+  max-height: 42mm;
+  border: 1px solid var(--rule);
+}
+
+ol.opts { list-style: none; margin: 0; padding: 0; }
+
+ol.opts li {
+  display: flex;
+  gap: 1.8mm;
+  padding: .4mm 0;
+}
+
+ol.opts .letter {
+  flex: 0 0 auto;
+  width: 4.6mm;
+  height: 4.6mm;
+  line-height: 4.4mm;
+  text-align: center;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  font-size: 8pt;
+}
+
+ol.opts .letter.right { background: var(--ink); color: #fff; }
+
+footer.sheet {
+  margin-top: 5mm;
+  padding-top: 2mm;
+  border-top: 1px solid var(--rule);
+  font-size: 8pt;
+  color: var(--muted);
+  column-span: all;
+}
+
+/* --- ключ --- */
+table.key { width: 100%; border-collapse: collapse; font-size: 10pt; }
+table.key th, table.key td { border: 1px solid var(--rule); padding: 1.6mm 2mm; text-align: left; }
+table.key th { background: #f2f2f2; font-size: 9pt; }
+table.key td.n { width: 10mm; text-align: center; font-weight: 600; }
+table.key td.a { width: 12mm; text-align: center; font-weight: 600; }
+.key-wrap { column-count: 2; column-gap: 8mm; }
+.key-wrap table { break-inside: auto; }
+.notes { margin-top: 5mm; font-size: 8.7pt; column-span: all; }
+.notes h2 { font-size: 10.5pt; margin: 0 0 2mm; }
+.notes li { margin-bottom: 1.5mm; }
+</style></head>
+<body>
+<header class="sheet">
+  <h1>Простейшие (Protozoa)</h1>
+  <p class="subtitle">Итоговый тест · 30 вопросов</p>
+  <div class="fields">
+    <span>Фамилия, имя _______________________________________</span>
+    <span class="short">Класс ___________</span>
+    <span class="short">Дата ___________</span>
+  </div>
+</header>
+<p class="hint">В каждом задании выберите <b>один</b> правильный ответ и обведите его букву.
+Всего 30 заданий, максимум 30 баллов.</p>
+<div class="questions"><article class="q"><div class="stem"><span class="num">1.</span><span>Как называются органоиды движения у амёбы обыкновенной?</span></div><ol class="opts"><li><span class="letter">А</span><span>Жгутики</span></li><li><span class="letter">Б</span><span>Псевдоподии</span></li><li><span class="letter">В</span><span>Реснички</span></li><li><span class="letter">Г</span><span>Миофибриллы</span></li></ol></article><article class="q"><div class="stem"><span class="num">2.</span><span>У какого организма есть стигма?</span></div><ol class="opts"><li><span class="letter">А</span><span>Амёба</span></li><li><span class="letter">Б</span><span>Эвглена зелёная</span></li><li><span class="letter">В</span><span>Инфузория-туфелька</span></li><li><span class="letter">Г</span><span>Малярийный плазмодий</span></li></ol></article><article class="q"><div class="stem"><span class="num">3.</span><span>Какое из простейших представлено на фотографии?</span></div><figure><img src="images/q03.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Эвглена зелёная</span></li><li><span class="letter">Б</span><span>Лейшмания</span></li><li><span class="letter">В</span><span>Трипаносома</span></li><li><span class="letter">Г</span><span>Амёба обыкновенная</span></li></ol></article><article class="q"><div class="stem"><span class="num">4.</span><span>Какие признаки характерны для простейших?</span></div><ol class="opts"><li><span class="letter">А</span><span>Одноклеточность</span></li><li><span class="letter">Б</span><span>Наличие ядра</span></li><li><span class="letter">В</span><span>Наличие клеточной стенки</span></li><li><span class="letter">Г</span><span>Невозможность передвигаться</span></li></ol></article><article class="q"><div class="stem"><span class="num">5.</span><span>Какое вещество придаёт эвглене зелёный цвет?</span></div><ol class="opts"><li><span class="letter">А</span><span>Крахмал</span></li><li><span class="letter">Б</span><span>Хлорофилл</span></li><li><span class="letter">В</span><span>Вода</span></li><li><span class="letter">Г</span><span>Жир</span></li></ol></article><article class="q"><div class="stem"><span class="num">6.</span><span>Какое из простейших является паразитом?</span></div><ol class="opts"><li><span class="letter">А</span><span>Лямблия</span></li><li><span class="letter">Б</span><span>Амёба обыкновенная</span></li><li><span class="letter">В</span><span>Инфузория-туфелька</span></li><li><span class="letter">Г</span><span>Раковинная амёба</span></li></ol></article><article class="q"><div class="stem"><span class="num">7.</span><span>С помощью чего передвигается данное простейшее?</span></div><figure><img src="images/q07.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Жгутик</span></li><li><span class="letter">Б</span><span>Реснички</span></li><li><span class="letter">В</span><span>Псевдоподии</span></li><li><span class="letter">Г</span><span>Нет органоидов передвижения</span></li></ol></article><article class="q"><div class="stem"><span class="num">8.</span><span>Какой процесс представлен на данной схеме?</span></div><figure><img src="images/q08.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Фагоцитоз</span></li><li><span class="letter">Б</span><span>Фототаксис</span></li><li><span class="letter">В</span><span>Пиноцитоз</span></li><li><span class="letter">Г</span><span>Экзоцитоз</span></li></ol></article><article class="q"><div class="stem"><span class="num">9.</span><span>Какое свойство живого проявляет эвглена зелёная, двигаясь в сторону более освещённого участка водоёма?</span></div><ol class="opts"><li><span class="letter">А</span><span>Развитие</span></li><li><span class="letter">Б</span><span>Размножение</span></li><li><span class="letter">В</span><span>Раздражимость</span></li><li><span class="letter">Г</span><span>Наследственность и изменчивость</span></li></ol></article><article class="q"><div class="stem"><span class="num">10.</span><span>В какой момент амёба обыкновенная превращается в цисту?</span></div><ol class="opts"><li><span class="letter">А</span><span>Перед делением</span></li><li><span class="letter">Б</span><span>Перед накоплением питательных веществ</span></li><li><span class="letter">В</span><span>При чрезмерном размножении</span></li><li><span class="letter">Г</span><span>При наступлении неблагоприятных условий</span></li></ol></article><article class="q"><div class="stem"><span class="num">11.</span><span>Дыхание у простейших происходит через</span></div><ol class="opts"><li><span class="letter">А</span><span>Сократительную вакуоль</span></li><li><span class="letter">Б</span><span>Порошицу</span></li><li><span class="letter">В</span><span>Всю поверхность тела</span></li><li><span class="letter">Г</span><span>Пищеварительную вакуоль</span></li></ol></article><article class="q"><div class="stem"><span class="num">12.</span><span>Какое из простейших вызывает малярию?</span></div><ol class="opts"><li><span class="letter">А</span><span>Эвглена зелёная</span></li><li><span class="letter">Б</span><span>Амёба дизентерийная</span></li><li><span class="letter">В</span><span>Малярийный плазмодий</span></li><li><span class="letter">Г</span><span>Арцелла</span></li></ol></article><article class="q"><div class="stem"><span class="num">13.</span><span>Какие простейшие принимают участие в образовании мела?</span></div><ol class="opts"><li><span class="letter">А</span><span>Эвглены</span></li><li><span class="letter">Б</span><span>Малярийные плазмодии</span></li><li><span class="letter">В</span><span>Фораминиферы</span></li><li><span class="letter">Г</span><span>Лейшмании</span></li></ol></article><article class="q"><div class="stem"><span class="num">14.</span><span>Какая структура инфузории обозначена цифрой 1?</span></div><figure><img src="images/q14.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Сократительная вакуоль</span></li><li><span class="letter">Б</span><span>Клеточный рот</span></li><li><span class="letter">В</span><span>Порошица</span></li><li><span class="letter">Г</span><span>Макронуклеус</span></li></ol></article><article class="q"><div class="stem"><span class="num">15.</span><span>Какая структура амёбы обозначена цифрой 1?</span></div><figure><img src="images/q15.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Ядро</span></li><li><span class="letter">Б</span><span>Пищеварительная вакуоль</span></li><li><span class="letter">В</span><span>Цитоплазма</span></li><li><span class="letter">Г</span><span>Ложноножка</span></li></ol></article><article class="q"><div class="stem"><span class="num">16.</span><span>Благодаря какому органоиду осуществляется фототаксис эвглены зелёной?</span></div><ol class="opts"><li><span class="letter">А</span><span>Цитоплазма</span></li><li><span class="letter">Б</span><span>Хлоропласты</span></li><li><span class="letter">В</span><span>Стигма</span></li><li><span class="letter">Г</span><span>Пищеварительная вакуоль</span></li></ol></article><article class="q"><div class="stem"><span class="num">17.</span><span>Какие органоиды не являются органоидами движения?</span></div><ol class="opts"><li><span class="letter">А</span><span>Жгутики</span></li><li><span class="letter">Б</span><span>Хлоропласты</span></li><li><span class="letter">В</span><span>Реснички</span></li><li><span class="letter">Г</span><span>Сократительная вакуоль</span></li></ol></article><article class="q"><div class="stem"><span class="num">18.</span><span>Какой органоид Простейших предназначен для удаления излишков жидкости вместе с растворёнными в ней продуктами жизнедеятельности?</span></div><ol class="opts"><li><span class="letter">А</span><span>Порошица</span></li><li><span class="letter">Б</span><span>Цитоплазма</span></li><li><span class="letter">В</span><span>Сократительная вакуоль</span></li><li><span class="letter">Г</span><span>Пищеварительная вакуоль</span></li></ol></article><article class="q"><div class="stem"><span class="num">19.</span><span>Какие простейшие изображены на фотографии?</span></div><figure><img src="images/q19.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Эвглены зелёные</span></li><li><span class="letter">Б</span><span>Трипаносомы</span></li><li><span class="letter">В</span><span>Амёбы</span></li><li><span class="letter">Г</span><span>Малярийные плазмодии</span></li></ol></article><article class="q"><div class="stem"><span class="num">20.</span><span>Какое простейшее изображено на фотографии?</span></div><figure><img src="images/q20.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Лямблия</span></li><li><span class="letter">Б</span><span>Трипаносома</span></li><li><span class="letter">В</span><span>Арцелла</span></li><li><span class="letter">Г</span><span>Лейшмания</span></li></ol></article><article class="q"><div class="stem"><span class="num">21.</span><span>Как называется стадия жизни, которую образуют Простейшие при неблагоприятных условиях?</span></div><ol class="opts"><li><span class="letter">А</span><span>Ложноножка</span></li><li><span class="letter">Б</span><span>Вакуоль</span></li><li><span class="letter">В</span><span>Циста</span></li><li><span class="letter">Г</span><span>Клеточная стенка</span></li></ol></article><article class="q"><div class="stem"><span class="num">22.</span><span>Какое из простейших вызывает сонную болезнь?</span></div><ol class="opts"><li><span class="letter">А</span><span>Трипаносома</span></li><li><span class="letter">Б</span><span>Лейшмания</span></li><li><span class="letter">В</span><span>Дизентерийная амёба</span></li><li><span class="letter">Г</span><span>Балантидий</span></li></ol></article><article class="q"><div class="stem"><span class="num">23.</span><span>Как называется движение эвглены зелёной в сторону источника света?</span></div><figure><img src="images/q23.png" alt=""></figure><ol class="opts"><li><span class="letter">А</span><span>Фагоцитоз</span></li><li><span class="letter">Б</span><span>Фототаксис</span></li><li><span class="letter">В</span><span>Гелиотропизм</span></li><li><span class="letter">Г</span><span>Геотропизм</span></li></ol></article><article class="q"><div class="stem"><span class="num">24.</span><span>Какие простейшие имеют минеральный скелет?</span></div><ol class="opts"><li><span class="letter">А</span><span>Инфузории</span></li><li><span class="letter">Б</span><span>Амёбы</span></li><li><span class="letter">В</span><span>Радиолярии</span></li><li><span class="letter">Г</span><span>Споровики</span></li></ol></article><article class="q"><div class="stem"><span class="num">25.</span><span>Через какой органоид инфузория-туфелька выбрасывает неперевариваемые остатки пищи?</span></div><ol class="opts"><li><span class="letter">А</span><span>Глотка</span></li><li><span class="letter">Б</span><span>Ротовое отверстие</span></li><li><span class="letter">В</span><span>Порошица</span></li><li><span class="letter">Г</span><span>Сократительная вакуоль</span></li></ol></article><article class="q"><div class="stem"><span class="num">26.</span><span>Непостоянную форму тела имеет</span></div><ol class="opts"><li><span class="letter">А</span><span>Амёба</span></li><li><span class="letter">Б</span><span>Эвглена зелёная</span></li><li><span class="letter">В</span><span>Инфузория-туфелька</span></li><li><span class="letter">Г</span><span>Инфузория Балантидий</span></li></ol></article><article class="q"><div class="stem"><span class="num">27.</span><span>Какое простейшее всегда содержит две сократительные вакуоли?</span></div><ol class="opts"><li><span class="letter">А</span><span>Амёба обыкновенная</span></li><li><span class="letter">Б</span><span>Эвглена зелёная</span></li><li><span class="letter">В</span><span>Вольвокс</span></li><li><span class="letter">Г</span><span>Инфузория-туфелька</span></li></ol></article><article class="q"><div class="stem"><span class="num">28.</span><span>Муха цеце переносит возбудителей сонной болезни, а именно:</span></div><ol class="opts"><li><span class="letter">А</span><span>Трипаносом</span></li><li><span class="letter">Б</span><span>Лейшманий</span></li><li><span class="letter">В</span><span>Лямблий</span></li><li><span class="letter">Г</span><span>Дизентерийных амёб</span></li></ol></article><article class="q"><div class="stem"><span class="num">29.</span><span>Какое из простейших имеет два ядра: микро- и макронуклеусы (большое и малое)?</span></div><ol class="opts"><li><span class="letter">А</span><span>Амёба обыкновенная</span></li><li><span class="letter">Б</span><span>Арцелла</span></li><li><span class="letter">В</span><span>Инфузория-туфелька</span></li><li><span class="letter">Г</span><span>Фораминифера</span></li></ol></article><article class="q"><div class="stem"><span class="num">30.</span><span>Какое простейшее передвигается с помощью одного жгутика?</span></div><ol class="opts"><li><span class="letter">А</span><span>Лямблия</span></li><li><span class="letter">Б</span><span>Эвглена зелёная</span></li><li><span class="letter">В</span><span>Инфузория-туфелька</span></li><li><span class="letter">Г</span><span>Балантидий</span></li></ol></article></div>
+<footer class="sheet">Расшифровано со скриншотов теста Wayground (formerly Quizizz)</footer>
+</body></html>
